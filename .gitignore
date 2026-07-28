@@ -1,4 +1,4 @@
-bin/game
+bin/ray_solitaire_variants*
 code/obj/*.o
 code/libs/obj/*.o
 
