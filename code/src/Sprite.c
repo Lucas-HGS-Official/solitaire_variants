@@ -1,4 +1,4 @@
-#include "SpriteSheet.h"
+#include "Sprite.h"
 
 #include <raylib.h>
 #include <stdlib.h>
