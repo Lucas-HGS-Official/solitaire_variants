@@ -1,4 +1,4 @@
-GAME_NAME = ray_solitaire_variants
+GAME_NAME = solitaire_variants
 
 TARGET = bin/$(GAME_NAME)
 WEB_TARGET = bin/$(GAME_NAME).html
