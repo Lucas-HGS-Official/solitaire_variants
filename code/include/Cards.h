@@ -5,6 +5,8 @@
 
 typedef struct Card {
     Sprite *spr;
+    int col;
+    int row;
 } Card;
 
 
