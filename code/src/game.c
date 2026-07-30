@@ -1,8 +1,15 @@
 #include "game.h"
 
 #include <raylib.h>
+#include <stdlib.h>
 
 #include "Settings.h"
+
+#include "Sprite.h"
+#include "Cards.h"
+
+
+Card *cards_spr = NULL;
 
 
 void _update_game(float dt);
@@ -13,6 +20,8 @@ void game_init(void) {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_NAME);
     InitAudioDevice();
     SetTargetFPS(60);
+
+    cards_spr = init_cards();
 
     return;
 }
@@ -27,6 +36,8 @@ void game_loop(void) {
 }
 
 void game_close(void) {
+    destroy_cards(cards_spr);
+
     CloseAudioDevice();
     CloseWindow();
 
@@ -40,9 +51,9 @@ void _update_game(float dt) {
 }
 void _draw_game(void) {
     BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(DARKGRAY);
 
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        draw_card(cards_spr);
 
     EndDrawing();
     return;
