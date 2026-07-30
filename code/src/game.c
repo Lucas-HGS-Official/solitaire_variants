@@ -5,11 +5,10 @@
 
 #include "Settings.h"
 
-#include "Sprite.h"
 #include "Cards.h"
 
 
-Card *cards_spr = NULL;
+Card *card = NULL;
 
 
 void _update_game(float dt);
@@ -21,7 +20,7 @@ void game_init(void) {
     InitAudioDevice();
     SetTargetFPS(60);
 
-    cards_spr = init_cards();
+    card = init_cards();
 
     return;
 }
@@ -36,7 +35,7 @@ void game_loop(void) {
 }
 
 void game_close(void) {
-    destroy_cards(cards_spr);
+    destroy_cards(card);
 
     CloseAudioDevice();
     CloseWindow();
@@ -46,6 +45,7 @@ void game_close(void) {
 
 
 void _update_game(float dt) {
+    update_card(card);
 
     return;
 }
@@ -53,7 +53,7 @@ void _draw_game(void) {
     BeginDrawing();
         ClearBackground(DARKGRAY);
 
-        draw_card(cards_spr);
+        draw_card(card);
 
     EndDrawing();
     return;
