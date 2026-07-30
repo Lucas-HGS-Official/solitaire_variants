@@ -13,10 +13,30 @@ typedef enum CARD_SUIT {
     NUM_SUIT,
 } CARD_SUIT;
 
+typedef enum CARD_NUM {
+    ACE_NUM,
+    TWO_NUM,
+    THREE_NUM,
+    FOUR_NUM,
+    FIVE_NUM,
+    SIX_NUM,
+    SEVEN_NUM,
+    EIGHT_NUM,
+    NINE_NUM,
+    TEN_NUM,
+    JACK_NUM,
+    QUEEN_NUM,
+    KING_NUM,
+
+    SPECIALS_NUM,
+
+    NUM_CARD_NUM,
+} CARD_NUM;
+
 
 typedef struct Card {
     Sprite *spr;
-    int col;
+    CARD_NUM num;
     CARD_SUIT suit;
 } Card;
 

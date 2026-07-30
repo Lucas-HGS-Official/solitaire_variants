@@ -1,7 +1,8 @@
 #include "Cards.h"
-#include "Sprite.h"
+
 #include <raylib.h>
 
+#include "Sprite.h"
 
 void _change_card_face(Card *card);
 
@@ -11,14 +12,14 @@ Card *init_cards(void) {
     Sprite *cards_spr = MemAlloc(sizeof(Sprite));
     init_sprite(cards_spr, "resources/cardsLarge_tilemap_packed.png");
     card->spr = cards_spr;
-    card->col = 0;
+    card->num = ACE_NUM;
     card->suit = CLUBS_SUIT;
 
-    cards_spr->src_rec.width /= 14;
+    cards_spr->src_rec.width /= NUM_CARD_NUM;
     cards_spr->src_rec.height /= NUM_SUIT;
     _change_card_face(card);
 
-    cards_spr->dest_rec.width /= 14;
+    cards_spr->dest_rec.width /= NUM_CARD_NUM;
     cards_spr->dest_rec.height /= NUM_SUIT;
 
     return card;
@@ -29,10 +30,16 @@ void draw_card(Card *cards) {
     return;
 }
 void update_card(Card *card) {
-    if (IsKeyPressed(KEY_SPACE)) {
+    if (IsKeyPressed(KEY_S)) {
         card->suit++;
         if (card->suit >= NUM_SUIT) {
             card->suit = HEARTS_SUIT;
+        }
+    }
+    if (IsKeyPressed(KEY_N)) {
+        card->num++;
+        if (card->num >= NUM_CARD_NUM) {
+            card->num = ACE_NUM;
         }
     }
     _change_card_face(card);
@@ -48,7 +55,7 @@ void destroy_cards(Card *card) {
 
 
 void _change_card_face(Card *card) {
-    card->spr->src_rec.x = card->spr->src_rec.width * card->col;
+    card->spr->src_rec.x = card->spr->src_rec.width * card->num;
     card->spr->src_rec.y = card->spr->src_rec.height * card->suit;
 
     return;
