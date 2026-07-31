@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 #include <raymath.h>
-#include <stdio.h>
+#include <stdbool.h>
 
 #include "Sprite.h"
 
@@ -17,6 +17,8 @@ Card *init_cards(void) {
     card->spr = cards_spr;
     card->num = ACE_NUM;
     card->suit = CLUBS_SUIT;
+
+    card->is_pickup = false;
 
     cards_spr->src_rec.width /= NUM_CARD_NUM;
     cards_spr->src_rec.height /= NUM_SUIT;
@@ -68,18 +70,15 @@ void _card_pickup(Card *card) {
     Vector2 mouse_card_delta = {0};
     Vector2 mouse_pos = GetMousePosition();
     Vector2 card_pos = { .x=card->spr->dest_rec.x, .y=card->spr->dest_rec.y };
-    if (CheckCollisionPointRec(mouse_pos, card->spr->dest_rec)) {
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            mouse_card_delta = (Vector2) { .x=mouse_pos.x - card_pos.x, .y=mouse_pos.y - card_pos.y };
-        }
-        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-            // mouse_pos = GetMousePosition();
-            printf("\n card: (x=%.2f, y=%.2f)\n", card_pos.x, card_pos.y);
-            printf(" mouse: (x=%.2f, y=%.2f)\n", mouse_pos.x, mouse_pos.y);
-            printf(" delta: (x=%.2f, y=%.2f)\n", mouse_card_delta.x, mouse_card_delta.y);
-            card->spr->dest_rec.x = mouse_pos.x - mouse_card_delta.x;
-            card->spr->dest_rec.y = mouse_pos.y - mouse_card_delta.y;
-        }
+    if (CheckCollisionPointRec(mouse_pos, card->spr->dest_rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        card->mouse_xydelta = Vector2Subtract(mouse_pos, card_pos);
+        card->is_pickup = true;
+    }
+    if (card->is_pickup && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+        card->is_pickup = false;
+    } else if (card->is_pickup) {
+        card->spr->dest_rec.x = mouse_pos.x - card->mouse_xydelta.x;
+        card->spr->dest_rec.y = mouse_pos.y - card->mouse_xydelta.y;
     }
 
     return;

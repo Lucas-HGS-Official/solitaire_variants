@@ -1,5 +1,8 @@
 #pragma once
 
+#include <raylib.h>
+#include <stdbool.h>
+
 #include <Sprite.h>
 
 
@@ -38,6 +41,8 @@ typedef struct Card {
     Sprite *spr;
     CARD_NUM num;
     CARD_SUIT suit;
+    Vector2 mouse_xydelta;
+    bool is_pickup;
 } Card;
 
 
