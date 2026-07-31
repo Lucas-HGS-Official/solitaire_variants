@@ -1,10 +1,13 @@
 #include "Cards.h"
 
 #include <raylib.h>
+#include <raymath.h>
+#include <stdio.h>
 
 #include "Sprite.h"
 
 void _change_card_face(Card *card);
+void _card_pickup(Card *card);
 
 
 Card *init_cards(void) {
@@ -43,6 +46,7 @@ void update_card(Card *card) {
         }
     }
     _change_card_face(card);
+    _card_pickup(card);
 
     return;
 }
@@ -57,6 +61,26 @@ void destroy_cards(Card *card) {
 void _change_card_face(Card *card) {
     card->spr->src_rec.x = card->spr->src_rec.width * card->num;
     card->spr->src_rec.y = card->spr->src_rec.height * card->suit;
+
+    return;
+}
+void _card_pickup(Card *card) {
+    Vector2 mouse_card_delta = {0};
+    Vector2 mouse_pos = GetMousePosition();
+    Vector2 card_pos = { .x=card->spr->dest_rec.x, .y=card->spr->dest_rec.y };
+    if (CheckCollisionPointRec(mouse_pos, card->spr->dest_rec)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            mouse_card_delta = (Vector2) { .x=mouse_pos.x - card_pos.x, .y=mouse_pos.y - card_pos.y };
+        }
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+            // mouse_pos = GetMousePosition();
+            printf("\n card: (x=%.2f, y=%.2f)\n", card_pos.x, card_pos.y);
+            printf(" mouse: (x=%.2f, y=%.2f)\n", mouse_pos.x, mouse_pos.y);
+            printf(" delta: (x=%.2f, y=%.2f)\n", mouse_card_delta.x, mouse_card_delta.y);
+            card->spr->dest_rec.x = mouse_pos.x - mouse_card_delta.x;
+            card->spr->dest_rec.y = mouse_pos.y - mouse_card_delta.y;
+        }
+    }
 
     return;
 }
