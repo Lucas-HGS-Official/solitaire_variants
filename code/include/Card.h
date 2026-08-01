@@ -46,7 +46,8 @@ typedef struct Card {
 } Card;
 
 
-Card *init_cards(void);
+Card *init_card(void);
 void draw_card(Card *card);
+void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit);
 void update_card(Card *card);
-void destroy_cards(Card *card);
+void destroy_card(Card *card);

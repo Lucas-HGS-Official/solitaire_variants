@@ -1,4 +1,4 @@
-#include "Cards.h"
+#include "Card.h"
 
 #include <raylib.h>
 #include <raymath.h>
@@ -6,11 +6,11 @@
 
 #include "Sprite.h"
 
-void _change_card_face(Card *card);
+
 void _card_pickup(Card *card);
 
 
-Card *init_cards(void) {
+Card *init_card(void) {
     Card *card = MemAlloc(sizeof(Card));
     Sprite *cards_spr = MemAlloc(sizeof(Sprite));
     init_sprite(cards_spr, "resources/cardsLarge_tilemap_packed.png");
@@ -22,7 +22,7 @@ Card *init_cards(void) {
 
     cards_spr->src_rec.width /= NUM_CARD_NUM;
     cards_spr->src_rec.height /= NUM_SUIT;
-    _change_card_face(card);
+    change_card_face(card, card->num, card->suit);
 
     cards_spr->dest_rec.width /= NUM_CARD_NUM;
     cards_spr->dest_rec.height /= NUM_SUIT;
@@ -31,6 +31,14 @@ Card *init_cards(void) {
 }
 void draw_card(Card *cards) {
     draw_sprite(cards->spr, cards->spr->tint);
+
+    return;
+}
+void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit) {
+    card->num = new_card_num;
+    card->suit = new_card_suit;
+    card->spr->src_rec.x = card->spr->src_rec.width * card->num;
+    card->spr->src_rec.y = card->spr->src_rec.height * card->suit;
 
     return;
 }
@@ -47,12 +55,12 @@ void update_card(Card *card) {
             card->num = ACE_NUM;
         }
     }
-    _change_card_face(card);
+    change_card_face(card, card->num, card->suit);
     _card_pickup(card);
 
     return;
 }
-void destroy_cards(Card *card) {
+void destroy_card(Card *card) {
     destroy_sprite(card->spr);
     MemFree(card);
 
@@ -60,12 +68,6 @@ void destroy_cards(Card *card) {
 }
 
 
-void _change_card_face(Card *card) {
-    card->spr->src_rec.x = card->spr->src_rec.width * card->num;
-    card->spr->src_rec.y = card->spr->src_rec.height * card->suit;
-
-    return;
-}
 void _card_pickup(Card *card) {
     Vector2 mouse_card_delta = {0};
     Vector2 mouse_pos = GetMousePosition();
