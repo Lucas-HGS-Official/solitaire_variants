@@ -38,7 +38,7 @@ typedef enum CARD_NUM {
 
 
 typedef struct Card {
-    Sprite *spr;
+    Sprite spr;
     CARD_NUM num;
     CARD_SUIT suit;
     Vector2 mouse_xydelta;
