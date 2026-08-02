@@ -26,6 +26,11 @@ Deck *init_deck(Card *card) {
         }
     }
 
+    change_card_face(&new_deck->blank, SPECIALS_NUM, HEARTS_SUIT);
+    change_card_face(&new_deck->back, SPECIALS_NUM, DIAMONDS_SUIT);
+    change_card_face(&new_deck->joker_red, SPECIALS_NUM, CLUBS_SUIT);
+    change_card_face(&new_deck->joker_black, SPECIALS_NUM, SPADES_SUIT);
+
     return new_deck;
 }
 void update_deck(Deck *deck) {

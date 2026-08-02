@@ -10,6 +10,10 @@
 
 typedef struct Deck {
     Card cards[52];
+    Card blank;
+    Card back;
+    Card joker_red;
+    Card joker_black;
 } Deck;
 
 
