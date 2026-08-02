@@ -8,15 +8,15 @@
 #define DECK_SIZE 52
 
 
-typedef struct Deck {
+typedef struct CardSet {
     Card cards[52];
     Card blank;
     Card back;
     Card joker_red;
     Card joker_black;
-} Deck;
+} CardSet;
 
 
-Deck *init_deck(Card *card);
-void update_deck(Deck *deck);
-void destroy_deck(Deck *deck);
+CardSet *init_deck(Card *card);
+void update_deck(CardSet *card_set);
+void destroy_deck(CardSet *card_set);
