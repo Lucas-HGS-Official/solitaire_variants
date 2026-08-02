@@ -1,7 +1,8 @@
 #include "Deck.h"
 
-#include "Card.h"
 #include <raylib.h>
+
+#include "Card.h"
 
 
 Deck *init_deck(Card *card) {
