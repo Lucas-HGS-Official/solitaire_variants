@@ -5,12 +5,12 @@
 
 #include "Settings.h"
 
-#include "Deck.h"
+#include "CardSet.h"
 #include "Card.h"
 
 
 Card *card = NULL;
-Deck *deck = NULL;
+CardSet *card_set = NULL;
 
 
 void _update_game(float dt);
@@ -23,7 +23,7 @@ void game_init(void) {
     SetTargetFPS(60);
 
     card = init_card();
-    deck = init_deck(card);
+    card_set = init_cardset(card);
 
     return;
 }
@@ -38,7 +38,7 @@ void game_loop(void) {
 }
 
 void game_close(void) {
-    destroy_deck(deck);
+    destroy_cardset(card_set);
     destroy_card(card);
 
     CloseAudioDevice();

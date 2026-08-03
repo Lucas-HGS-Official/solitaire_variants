@@ -5,7 +5,7 @@
 #include "Card.h"
 
 
-CardSet *init_deck(Card *card) {
+CardSet *init_cardset(Card *card) {
     CardSet *new_set = MemAlloc(sizeof(CardSet));
 
     CARD_SUIT suit = HEARTS_SUIT;
@@ -33,11 +33,11 @@ CardSet *init_deck(Card *card) {
 
     return new_set;
 }
-void update_deck(CardSet *card_set) {
+void update_cardset(CardSet *card_set) {
 
     return;
 }
-void destroy_deck(CardSet *card_set) {
+void destroy_cardset(CardSet *card_set) {
     MemFree(card_set);
 
     return;
