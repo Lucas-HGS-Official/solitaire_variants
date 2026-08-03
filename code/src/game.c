@@ -7,10 +7,12 @@
 
 #include "CardSet.h"
 #include "Card.h"
+#include "Slot.h"
 
 
 Card *card = NULL;
 CardSet *card_set = NULL;
+Slot *card_slot = NULL;
 
 
 void _update_game(float dt);
@@ -24,6 +26,7 @@ void game_init(void) {
 
     card = init_card();
     card_set = init_cardset(card);
+    card_slot = init_slot((Vector2) { 0, 0 }, card);
 
     return;
 }
@@ -38,6 +41,7 @@ void game_loop(void) {
 }
 
 void game_close(void) {
+    destroy_slot(card_slot);
     destroy_cardset(card_set);
     destroy_card(card);
 
@@ -55,8 +59,9 @@ void _update_game(float dt) {
 }
 void _draw_game(void) {
     BeginDrawing();
-        ClearBackground(DARKGRAY);
+        ClearBackground(SKYBLUE);
 
+        draw_slot(card_slot);
         draw_card(card);
 
     EndDrawing();
