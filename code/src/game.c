@@ -24,7 +24,7 @@ void game_init(void) {
     InitAudioDevice();
     SetTargetFPS(60);
 
-    card = init_card();
+    card = init_card((Vector2) { 0, 0 });
     card_set = init_cardset(card);
     card_slot = init_slot((Vector2) { 0, 0 }, card);
 
@@ -53,7 +53,7 @@ void game_close(void) {
 
 
 void _update_game(float dt) {
-    update_card(card);
+    update_card(card, dt);
 
     return;
 }

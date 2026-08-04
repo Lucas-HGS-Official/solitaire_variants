@@ -10,28 +10,32 @@
 void _card_pickup(Card *card);
 
 
-Card *init_card(void) {
+Card *init_card(Vector2 test_card_slot) {
     Card *card = MemAlloc(sizeof(Card));
     Sprite cards_spr = {0};
     init_sprite(&cards_spr, "resources/cardsLarge_tilemap_packed.png");
     card->num = ACE_NUM;
     card->suit = CLUBS_SUIT;
 
+    card->speed = 20.f;
     card->is_pickup = false;
+    card->is_active = true;
 
     cards_spr.src_rec.width /= NUM_CARD_NUM;
     cards_spr.src_rec.height /= NUM_SUIT;
-    change_card_face(card, card->num, card->suit);
 
     cards_spr.dest_rec.width /= NUM_CARD_NUM;
     cards_spr.dest_rec.height /= NUM_SUIT;
 
     card->spr = cards_spr;
+    change_card_face(card, card->num, card->suit);
 
     return card;
 }
-void draw_card(Card *cards) {
-    draw_sprite(&cards->spr, cards->spr.tint);
+void draw_card(Card *card) {
+    if (card->is_active) {
+        draw_sprite(&card->spr, card->spr.tint);
+    }
 
     return;
 }
@@ -43,21 +47,23 @@ void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit
 
     return;
 }
-void update_card(Card *card) {
-    if (IsKeyPressed(KEY_S)) {
-        card->suit++;
-        if (card->suit >= NUM_SUIT) {
-            card->suit = HEARTS_SUIT;
+void update_card(Card *card, float dt) {
+    if (card->is_active) {
+        if (IsKeyPressed(KEY_S)) {
+            card->suit++;
+            if (card->suit >= NUM_SUIT) {
+                card->suit = HEARTS_SUIT;
+            }
         }
-    }
-    if (IsKeyPressed(KEY_N)) {
-        card->num++;
-        if (card->num >= NUM_CARD_NUM) {
-            card->num = ACE_NUM;
+        if (IsKeyPressed(KEY_N)) {
+            card->num++;
+            if (card->num >= NUM_CARD_NUM) {
+                card->num = ACE_NUM;
+            }
         }
+        change_card_face(card, card->num, card->suit);
+        _card_pickup(card);
     }
-    change_card_face(card, card->num, card->suit);
-    _card_pickup(card);
 
     return;
 }

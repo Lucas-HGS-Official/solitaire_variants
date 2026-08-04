@@ -3,7 +3,7 @@
 #include <raylib.h>
 #include <stdbool.h>
 
-#include <Sprite.h>
+#include "Sprite.h"
 
 
 typedef enum CARD_SUIT {
@@ -42,12 +42,16 @@ typedef struct Card {
     CARD_NUM num;
     CARD_SUIT suit;
     Vector2 mouse_xydelta;
+    Vector2 last_slot;
+    Vector2 direction;
+    float speed;
     bool is_pickup;
+    bool is_active;
 } Card;
 
 
-Card *init_card(void);
+Card *init_card(Vector2 test_card_slot);
 void draw_card(Card *card);
 void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit);
-void update_card(Card *card);
+void update_card(Card *card, float dt);
 void destroy_card(Card *card);
