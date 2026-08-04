@@ -8,6 +8,7 @@
 
 
 void _card_pickup(Card *card);
+void _move_card_to_slot(Card *card, float dt);
 
 
 Card *init_card(Vector2 test_card_slot) {
@@ -17,7 +18,7 @@ Card *init_card(Vector2 test_card_slot) {
     card->num = ACE_NUM;
     card->suit = CLUBS_SUIT;
 
-    card->speed = 20.f;
+    card->speed = 400.f;
     card->is_pickup = false;
     card->is_active = true;
 
@@ -63,6 +64,7 @@ void update_card(Card *card, float dt) {
         }
         change_card_face(card, card->num, card->suit);
         _card_pickup(card);
+        _move_card_to_slot(card, dt);
     }
 
     return;
@@ -88,6 +90,20 @@ void _card_pickup(Card *card) {
     } else if (card->is_pickup) {
         card->spr.dest_rec.x = mouse_pos.x - card->mouse_xydelta.x;
         card->spr.dest_rec.y = mouse_pos.y - card->mouse_xydelta.y;
+    }
+
+    return;
+}
+void _move_card_to_slot(Card *card, float dt) {
+    Vector2 card_pos = { card->spr.dest_rec.x, card->spr.dest_rec.y };
+    if (Vector2Distance(card_pos, card->last_slot) < 1.f) {
+        return;
+    }
+    if (!card->is_pickup) {
+        card->direction = Vector2Normalize(Vector2Subtract(card->last_slot, card_pos));
+
+        card->spr.dest_rec.x += card->direction.x * card->speed * dt;
+        card->spr.dest_rec.y += card->direction.y * card->speed * dt;
     }
 
     return;
