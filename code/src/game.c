@@ -1,18 +1,10 @@
 #include "game.h"
 
 #include <raylib.h>
-#include <stdlib.h>
 
 #include "Settings.h"
 
-#include "CardSet.h"
-#include "Card.h"
-#include "Slot.h"
-
-
-Card *card = NULL;
-CardSet *card_set = NULL;
-Slot *card_slot = NULL;
+#include "scene.h"
 
 
 void _update_game(float dt);
@@ -23,10 +15,8 @@ void game_init(void) {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_NAME);
     InitAudioDevice();
     SetTargetFPS(60);
+    init_scene();
 
-    card = init_card((Vector2) { 0, 0 });
-    card_set = init_cardset(card);
-    card_slot = init_slot((Vector2) { 0, 0 }, card);
 
     return;
 }
@@ -41,9 +31,7 @@ void game_loop(void) {
 }
 
 void game_close(void) {
-    destroy_slot(card_slot);
-    destroy_cardset(card_set);
-    destroy_card(card);
+    destroy_scene();
 
     CloseAudioDevice();
     CloseWindow();
@@ -53,16 +41,13 @@ void game_close(void) {
 
 
 void _update_game(float dt) {
-    update_card(card, dt);
+    update_scene(dt);
 
     return;
 }
 void _draw_game(void) {
     BeginDrawing();
-        ClearBackground(SKYBLUE);
-
-        draw_slot(card_slot);
-        draw_card(card);
+    draw_scene();
 
     EndDrawing();
     return;
