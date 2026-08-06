@@ -1,5 +1,7 @@
 #pragma once
 
+#include "settings.h"
+
 
 void init_scene(void);
 void update_scene(float dt);

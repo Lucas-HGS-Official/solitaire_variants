@@ -1,7 +1,8 @@
 #pragma once
 
-#include <raylib.h>
 #include <stdbool.h>
+
+#include "settings.h"
 
 #include "Card.h"
 

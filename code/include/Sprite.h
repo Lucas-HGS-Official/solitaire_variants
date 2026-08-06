@@ -1,6 +1,6 @@
 #pragma once
 
-#include <raylib.h>
+#include "settings.h"
 
 typedef struct Sprite {
     Texture2D *texture;
