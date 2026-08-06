@@ -96,7 +96,7 @@ void _card_pickup(Card *card) {
 }
 void _move_card_to_slot(Card *card, float dt) {
     Vector2 card_pos = { card->spr.dest_rec.x, card->spr.dest_rec.y };
-    if (Vector2Distance(card_pos, card->last_slot) < 1.f) {
+    if (Vector2Distance(card_pos, card->last_slot) < 9.f) {
         card->spr.dest_rec.x = card->last_slot.x;
         card->spr.dest_rec.y = card->last_slot.y;
 
