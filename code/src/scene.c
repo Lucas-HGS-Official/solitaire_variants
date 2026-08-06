@@ -22,6 +22,11 @@ void init_scene(void) {
 void update_scene(float dt) {
     update_card(card_template, dt);
 
+    Vector2 card_pos = { card_template->spr.dest_rec.x, card_template->spr.dest_rec.y };
+    if (Vector2Distance(card_pos, card_template->last_slot) <= 1.f && !card_template->is_pickup) {
+        add_card_to_slot(card_slot, card_template);
+    }
+
     return;
 }
 void draw_scene(void) {
