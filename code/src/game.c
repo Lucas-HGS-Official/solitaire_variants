@@ -1,9 +1,5 @@
 #include "game.h"
 
-#include <raylib.h>
-
-#include "Settings.h"
-
 #include "scene.h"
 
 
