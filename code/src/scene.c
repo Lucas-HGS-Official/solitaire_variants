@@ -13,9 +13,9 @@ Slot *card_slot = NULL;
 
 
 void init_scene(void) {
-    card = init_card((Vector2) { 0, 0 });
+    card = init_card((Vector2) { 10, 10 });
     card_set = init_cardset(card);
-    card_slot = init_slot((Vector2) { 0, 0 }, card);
+    card_slot = init_slot((Vector2) { 10, 10 }, card);
 
     return;
 }
