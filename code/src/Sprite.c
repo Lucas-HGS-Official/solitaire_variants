@@ -1,9 +1,6 @@
 #include "Sprite.h"
 
-#include <raylib.h>
 #include <stdlib.h>
-
-#include "Settings.h"
 
 
 static int _comp_y_value(const void * elem1, const void * elem2);
