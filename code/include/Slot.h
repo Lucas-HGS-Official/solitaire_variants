@@ -1,6 +1,7 @@
 #pragma once
 
 #include <raylib.h>
+#include <stdbool.h>
 
 #include "Card.h"
 
@@ -11,6 +12,7 @@ typedef struct Slot {
     Card bottom;
     Rectangle rect;
     int size;
+    bool is_faceup;
 } Slot;
 
 
@@ -18,3 +20,5 @@ Slot *init_slot(Vector2 slot_pos, Card *card_template);
 void update_slot(Slot *slot);
 void draw_slot(Slot *slot);
 void destroy_slot(Slot *slot);
+
+void add_card_to_slot(Slot *slot, Card *card);

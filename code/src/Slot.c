@@ -42,3 +42,17 @@ void destroy_slot(Slot *slot) {
 
     return;
 }
+void add_card_to_slot(Slot *slot, Card *card) {
+    for (int i=0; i<200; i++) {
+        if (!slot->pile[i].is_active) {
+            slot->pile[i] = *card;
+            slot->top = *card;
+            if (!slot->is_faceup) {
+                change_card_face(&slot->top, SPECIALS_NUM, DIAMONDS_SUIT);
+            }
+            card->is_active = false;
+        }
+    }
+
+    return;
+}
