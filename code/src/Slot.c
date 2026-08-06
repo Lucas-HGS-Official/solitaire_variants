@@ -1,7 +1,5 @@
 #include "Slot.h"
 
-#include <raylib.h>
-
 #include "Card.h"
 
 
@@ -14,6 +12,7 @@ Slot *init_slot(Vector2 slot_pos, Card *card_template) {
     new_slot->bottom = (Card) {0};
     new_slot->top = (Card) {0};
     new_slot->size = 0;
+    new_slot->is_faceup = true;
 
     new_slot->rect = card_template->spr.dest_rec;
     new_slot->rect.x = slot_pos.x;
@@ -43,6 +42,9 @@ void destroy_slot(Slot *slot) {
     return;
 }
 void add_card_to_slot(Slot *slot, Card *card) {
+    if (!card->is_active) {
+        return;
+    }
     for (int i=0; i<200; i++) {
         if (!slot->pile[i].is_active) {
             slot->pile[i] = *card;
@@ -50,7 +52,13 @@ void add_card_to_slot(Slot *slot, Card *card) {
             if (!slot->is_faceup) {
                 change_card_face(&slot->top, SPECIALS_NUM, DIAMONDS_SUIT);
             }
+            slot->top.spr.dest_rec.x = slot->rect.x;
+            slot->top.spr.dest_rec.y = slot->rect.y;
+            slot->size++;
+
             card->is_active = false;
+
+            break;
         }
     }
 
