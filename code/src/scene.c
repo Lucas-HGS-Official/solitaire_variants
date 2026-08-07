@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "CardSet.h"
-#include "Card.h"
+#include "CardLose.h"
 #include "Slot.h"
 
 

@@ -1,6 +1,6 @@
 #include "Slot.h"
 
-#include "Card.h"
+#include "CardLose.h"
 
 
 Slot *init_slot(Vector2 slot_pos, Card *card_template) {

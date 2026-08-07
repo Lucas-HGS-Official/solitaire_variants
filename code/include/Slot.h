@@ -4,7 +4,7 @@
 
 #include "settings.h"
 
-#include "Card.h"
+#include "CardSet.h"
 
 
 typedef struct Slot {
