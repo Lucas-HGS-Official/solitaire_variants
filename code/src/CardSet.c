@@ -1,6 +1,6 @@
 #include "CardSet.h"
 
-#include "Card.h"
+#include "CardLose.h"
 #include "Sprite.h"
 
 
