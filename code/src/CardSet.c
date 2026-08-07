@@ -1,17 +1,31 @@
 #include "CardSet.h"
 
-#include <raylib.h>
-
 #include "Card.h"
+#include "Sprite.h"
 
 
-CardSet *init_cardset(Card *card) {
+CardSet *init_cardset(void) {
+    Card card_template = {0};
+    init_sprite(&card_template.spr, "resources/cardsLarge_tilemap_packed.png");
+    card_template.num = ACE_NUM;
+    card_template.suit = CLUBS_SUIT;
+
+    card_template.speed = 400.f;
+    card_template.is_pickup = false;
+    card_template.is_active = true;
+
+    card_template.spr.src_rec.width /= NUM_CARD_NUM;
+    card_template.spr.src_rec.height /= NUM_SUIT;
+
+    card_template.spr.dest_rec.width /= NUM_CARD_NUM;
+    card_template.spr.dest_rec.height /= NUM_SUIT;
+
     CardSet *new_set = MemAlloc(sizeof(CardSet));
 
     CARD_SUIT suit = HEARTS_SUIT;
     CARD_NUM num = ACE_NUM;
     for (int i=0; i<DECK_SIZE; i++) {
-        new_set->cards[i] = *card;
+        new_set->cards[i] = card_template;
 
         change_card_face(&new_set->cards[i], num, suit);
 

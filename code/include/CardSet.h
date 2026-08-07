@@ -17,6 +17,6 @@ typedef struct CardSet {
 } CardSet;
 
 
-CardSet *init_cardset(Card *card);
+CardSet *init_cardset(void);
 void update_cardset(CardSet *card_set);
 void destroy_cardset(CardSet *card_set);
