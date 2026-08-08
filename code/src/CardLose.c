@@ -1,7 +1,9 @@
 #include "CardLose.h"
 
+#include <raylib.h>
 #include <stdbool.h>
 
+#include "CardSet.h"
 #include "Sprite.h"
 
 
@@ -29,7 +31,17 @@ Card *init_card(Vector2 test_card_slot) {
     card->spr = cards_spr;
     change_card_face(card, card->num, card->suit);
 
+    card->last_slot = test_card_slot;
+
     return card;
+}
+Card *instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Vector2 test_card_slot) {
+    Card *new_card = MemAlloc(sizeof(Card));
+
+    *new_card = card_set->cards[(suit+1) * num];
+    new_card->last_slot = test_card_slot;
+
+    return new_card;
 }
 void draw_card(Card *card) {
     if (card->is_active) {
@@ -93,8 +105,11 @@ void _card_pickup(Card *card) {
     return;
 }
 void _move_card_to_slot(Card *card, float dt) {
+    if (card->last_slot.x == 0 && card->last_slot.y == 0) {
+        return;
+    }
     Vector2 card_pos = { card->spr.dest_rec.x, card->spr.dest_rec.y };
-    if (Vector2Distance(card_pos, card->last_slot) < 9.f) {
+    if (Vector2Distance(card_pos, card->last_slot) < 5.f) {
         card->spr.dest_rec.x = card->last_slot.x;
         card->spr.dest_rec.y = card->last_slot.y;
 
