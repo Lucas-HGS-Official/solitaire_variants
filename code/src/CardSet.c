@@ -51,7 +51,16 @@ void update_cardset(CardSet *card_set) {
 
     return;
 }
+void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit) {
+    card->num = new_card_num;
+    card->suit = new_card_suit;
+    card->spr.src_rec.x = card->spr.src_rec.width * card->num;
+    card->spr.src_rec.y = card->spr.src_rec.height * card->suit;
+
+    return;
+}
 void destroy_cardset(CardSet *card_set) {
+    destroy_sprite(&card_set->cards->spr);
     MemFree(card_set);
 
     return;

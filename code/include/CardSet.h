@@ -61,4 +61,5 @@ typedef struct CardSet {
 
 CardSet *init_cardset(void);
 void update_cardset(CardSet *card_set);
+void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit);
 void destroy_cardset(CardSet *card_set);

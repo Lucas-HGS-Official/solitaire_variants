@@ -11,30 +11,6 @@ void _card_pickup(Card *card);
 void _move_card_to_slot(Card *card, float dt);
 
 
-Card *init_card(Vector2 test_card_slot) {
-    Card *card = MemAlloc(sizeof(Card));
-    Sprite cards_spr = {0};
-    init_sprite(&cards_spr, "resources/cardsLarge_tilemap_packed.png");
-    card->num = ACE_NUM;
-    card->suit = CLUBS_SUIT;
-
-    card->speed = 400.f;
-    card->is_pickup = false;
-    card->is_active = true;
-
-    cards_spr.src_rec.width /= NUM_CARD_NUM;
-    cards_spr.src_rec.height /= NUM_SUIT;
-
-    cards_spr.dest_rec.width /= NUM_CARD_NUM;
-    cards_spr.dest_rec.height /= NUM_SUIT;
-
-    card->spr = cards_spr;
-    change_card_face(card, card->num, card->suit);
-
-    card->last_slot = test_card_slot;
-
-    return card;
-}
 Card *instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Vector2 test_card_slot) {
     Card *new_card = MemAlloc(sizeof(Card));
 
@@ -47,14 +23,6 @@ void draw_card(Card *card) {
     if (card->is_active) {
         draw_sprite(&card->spr, card->spr.tint);
     }
-
-    return;
-}
-void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit) {
-    card->num = new_card_num;
-    card->suit = new_card_suit;
-    card->spr.src_rec.x = card->spr.src_rec.width * card->num;
-    card->spr.src_rec.y = card->spr.src_rec.height * card->suit;
 
     return;
 }
@@ -80,7 +48,6 @@ void update_card(Card *card, float dt) {
     return;
 }
 void destroy_card(Card *card) {
-    destroy_sprite(&card->spr);
     MemFree(card);
 
     return;
