@@ -23,4 +23,4 @@ void update_slot(Slot *slot);
 void draw_slot(Slot *slot);
 void destroy_slot(Slot *slot);
 
-void add_card_to_slot(Slot *slot, Card *card);
+void push_card_to_slot(Slot *slot, Card *card);

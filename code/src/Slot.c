@@ -41,7 +41,7 @@ void destroy_slot(Slot *slot) {
 
     return;
 }
-void add_card_to_slot(Slot *slot, Card *card) {
+void push_card_to_slot(Slot *slot, Card *card) {
     if (!card->is_active) {
         return;
     }
