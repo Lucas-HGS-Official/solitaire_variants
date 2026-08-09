@@ -2,7 +2,8 @@
 
 #include <stdbool.h>
 
-#include "settings.h"
+#include <raylib.h>
+#include <raymath.h>
 
 #include "CardSet.h"
 #include "Slot.h"

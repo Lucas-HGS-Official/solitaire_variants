@@ -1,6 +1,7 @@
 #pragma once
 
-#include "settings.h"
+#include <raylib.h>
+#include <raymath.h>
 
 #include "Sprite.h"
 

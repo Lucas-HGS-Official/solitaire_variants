@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include "settings.h"
+
 #include "scene.h"
 
 

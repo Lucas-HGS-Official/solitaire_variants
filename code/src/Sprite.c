@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "settings.h"
+
 
 static int _comp_y_value(const void * elem1, const void * elem2);
 
