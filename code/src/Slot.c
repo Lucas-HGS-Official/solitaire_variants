@@ -4,7 +4,7 @@
 #include "CardSet.h"
 
 
-Slot *init_slot(Vector2 slot_pos, Card *card_template) {
+Slot *init_slot(Vector2 slot_pos, CardSet *card_set) {
     Slot *new_slot = MemAlloc(sizeof(Slot));
 
     for (int i=0; i<MAX_CARDS; i++) {
@@ -15,7 +15,7 @@ Slot *init_slot(Vector2 slot_pos, Card *card_template) {
     new_slot->size = 0;
     new_slot->is_faceup = true;
 
-    new_slot->rect = card_template->spr.dest_rec;
+    new_slot->rect = card_set->blank.spr.dest_rec;
     new_slot->rect.x = slot_pos.x;
     new_slot->rect.y = slot_pos.y;
 

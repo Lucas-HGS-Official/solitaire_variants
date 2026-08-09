@@ -18,7 +18,7 @@ typedef struct Slot {
 } Slot;
 
 
-Slot *init_slot(Vector2 slot_pos, Card *card_template);
+Slot *init_slot(Vector2 slot_pos, CardSet *card_set);
 void update_slot(Slot *slot);
 void draw_slot(Slot *slot);
 void destroy_slot(Slot *slot);
