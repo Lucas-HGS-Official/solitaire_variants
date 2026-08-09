@@ -7,7 +7,7 @@
 Slot *init_slot(Vector2 slot_pos, Card *card_template) {
     Slot *new_slot = MemAlloc(sizeof(Slot));
 
-    for (int i=0; i<200; i++) {
+    for (int i=0; i<MAX_CARDS; i++) {
         new_slot->pile[i] = (Card) {0};
     }
     new_slot->bottom = (Card) {0};
@@ -46,7 +46,7 @@ void push_card_to_slot(Slot *slot, Card *card) {
     if (!card->is_active) {
         return;
     }
-    for (int i=0; i<200; i++) {
+    for (int i=0; i<MAX_CARDS; i++) {
         if (!slot->pile[i].is_active) {
             slot->pile[i] = *card;
             slot->top = *card;
@@ -70,7 +70,7 @@ Card pop_card_from_slot(Slot *slot, CardSet *card_set) {
 
     Card *top_card = {0};
     Card *new_top_card = {0};
-    for (int i=0; i<200; i++) {
+    for (int i=0; i<MAX_CARDS; i++) {
         if (!slot->pile[i].is_active) {
             break;
         }

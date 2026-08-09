@@ -6,6 +6,8 @@
 #include "Sprite.h"
 
 
+#define MAX_CARDS 200
+
 #define DECK_SIZE 52
 
 typedef enum CARD_SUIT {
@@ -52,7 +54,7 @@ typedef struct Card {
 } Card;
 
 typedef struct CardSet {
-    Card cards[52];
+    Card cards[DECK_SIZE];
     Card blank;
     Card back;
     Card joker_red;

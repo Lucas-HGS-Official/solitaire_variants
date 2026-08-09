@@ -9,7 +9,7 @@
 
 
 typedef struct Slot {
-    Card pile[200];
+    Card pile[MAX_CARDS];
     Card top;
     Card bottom;
     Rectangle rect;

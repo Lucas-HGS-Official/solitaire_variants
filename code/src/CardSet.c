@@ -9,7 +9,7 @@ CardSet *init_cardset(void) {
     card_template.num = ACE_NUM;
     card_template.suit = CLUBS_SUIT;
 
-    card_template.speed = 400.f;
+    card_template.speed = 600.f;
     card_template.is_pickup = false;
     card_template.is_active = true;
 
