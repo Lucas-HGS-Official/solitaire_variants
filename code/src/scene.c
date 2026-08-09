@@ -15,10 +15,10 @@ Slot *card_slot = NULL;
 void init_scene(void) {
     card_set = init_cardset();
 
+    card_slot = init_slot((Vector2) { 10, 10 }, &card_set->cards[0]);
     card_template = MemAlloc(sizeof(Card));
-    *card_template = instance_card(card_set, CLUBS_SUIT, ACE_NUM, (Vector2) { 10, 10 });
+    *card_template = instance_card(card_set, CLUBS_SUIT, ACE_NUM, card_slot);
 
-    card_slot = init_slot((Vector2) { 10, 10 }, card_template);
 
     return;
 }

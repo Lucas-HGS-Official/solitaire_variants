@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include "CardSet.h"
+#include "Slot.h"
 #include "Sprite.h"
 
 
@@ -11,9 +12,9 @@ void _card_pickup(Card *card);
 void _move_card_to_slot(Card *card, float dt);
 
 
-Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Vector2 test_card_slot) {
+Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Slot *test_card_slot) {
     Card new_card = card_set->cards[(suit+1) * num];
-    new_card.last_slot = test_card_slot;
+    new_card.last_slot = (Vector2) { test_card_slot->rect.x, test_card_slot->rect.y };
 
     return new_card;
 }
