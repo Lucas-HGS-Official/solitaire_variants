@@ -54,7 +54,6 @@ void destroy_card(Card *card) {
 
 
 void _card_pickup(Card *card) {
-    Vector2 mouse_card_delta = {0};
     Vector2 mouse_pos = GetMousePosition();
     Vector2 card_pos = { .x=card->spr.dest_rec.x, .y=card->spr.dest_rec.y };
     if (CheckCollisionPointRec(mouse_pos, card->spr.dest_rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
