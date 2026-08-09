@@ -79,6 +79,7 @@ Card pop_card_from_slot(Slot *slot, CardSet *card_set) {
     }
     card_from_slot = *top_card;
     *top_card = (Card) {0};
+    slot->size--;
 
     slot->top = *new_top_card;
     if (!slot->is_faceup) {
