@@ -1,6 +1,7 @@
 #include "Slot.h"
 
 #include "CardLose.h"
+#include "CardSet.h"
 
 
 Slot *init_slot(Vector2 slot_pos, Card *card_template) {
@@ -63,4 +64,26 @@ void push_card_to_slot(Slot *slot, Card *card) {
     }
 
     return;
+}
+Card pop_card_from_slot(Slot *slot, CardSet *card_set) {
+    Card card_from_slot = {0};
+
+    Card *top_card = {0};
+    Card *new_top_card = {0};
+    for (int i=0; i<200; i++) {
+        if (!slot->pile[i].is_active) {
+            break;
+        }
+        top_card = &slot->pile[i];
+        new_top_card = &slot->pile[i-1];
+    }
+    card_from_slot = *top_card;
+    *top_card = (Card) {0};
+
+    slot->top = *new_top_card;
+    if (!slot->is_faceup) {
+        change_card_face(&slot->top, SPECIALS_NUM, DIAMONDS_SUIT);
+    }
+
+    return card_from_slot;
 }

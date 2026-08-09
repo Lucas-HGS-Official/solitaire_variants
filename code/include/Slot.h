@@ -24,3 +24,4 @@ void draw_slot(Slot *slot);
 void destroy_slot(Slot *slot);
 
 void push_card_to_slot(Slot *slot, Card *card);
+Card pop_card_from_slot(Slot *slot, CardSet *card_set);
