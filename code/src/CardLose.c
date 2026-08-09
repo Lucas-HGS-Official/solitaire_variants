@@ -27,19 +27,6 @@ void draw_card(Card *card) {
 }
 void update_card(Card *card, float dt) {
     if (card->is_active) {
-        if (IsKeyPressed(KEY_S)) {
-            card->suit++;
-            if (card->suit >= NUM_SUIT) {
-                card->suit = HEARTS_SUIT;
-            }
-        }
-        if (IsKeyPressed(KEY_N)) {
-            card->num++;
-            if (card->num >= NUM_CARD_NUM) {
-                card->num = ACE_NUM;
-            }
-        }
-        change_card_face(card, card->num, card->suit);
         _card_pickup(card);
         _move_card_to_slot(card, dt);
     }
