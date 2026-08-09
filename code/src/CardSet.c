@@ -39,9 +39,16 @@ CardSet *init_cardset(void) {
         }
     }
 
+    new_set->blank = card_template;
     change_card_face(&new_set->blank, SPECIALS_NUM, HEARTS_SUIT);
+
+    new_set->back = card_template;
     change_card_face(&new_set->back, SPECIALS_NUM, DIAMONDS_SUIT);
+
+    new_set->joker_red = card_template;
     change_card_face(&new_set->joker_red, SPECIALS_NUM, CLUBS_SUIT);
+
+    new_set->joker_black = card_template;
     change_card_face(&new_set->joker_black, SPECIALS_NUM, SPADES_SUIT);
 
     return new_set;
