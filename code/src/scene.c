@@ -11,7 +11,6 @@
 
 
 Card card_list[MAX_CARDS] = {0};
-// Card *card_template = NULL;
 CardSet *card_set = NULL;
 Slot *card_slot = NULL;
 Deck *deck = NULL;
@@ -31,17 +30,25 @@ void init_scene(void) {
 void update_scene(float dt) {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         if (CheckCollisionPointRec(GetMousePosition(), card_slot->rect)) {
-            card_list[0] = pop_card_from_slot(card_slot, card_set);
-            card_list[0].is_pickup = true;
+            for (int i=0; i<MAX_CARDS; i++) {
+                if (!card_list[i].is_active) {
+                    card_list[i] = pop_card_from_slot(card_slot, card_set);
+                    card_list[i].is_pickup = true;
+                    break;
+                }
+            }
         }
     }
 
-    Vector2 card_pos = { card_list[0].spr.dest_rec.x, card_list[0].spr.dest_rec.y };
-    if (Vector2Distance(card_pos, card_list[0].last_slot) <= 1.f && !card_list[0].is_pickup) {
-        push_card_to_slot(card_slot, &card_list[0]);
+    for (int i=0; i<MAX_CARDS; i++) {
+        if (card_list[i].is_active) {
+            Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
+            if (Vector2Distance(card_pos, card_list[i].last_slot) <= 1.f && !card_list[i].is_pickup) {
+                push_card_to_slot(card_slot, &card_list[i]);
+            }
+            update_card(&card_list[i], dt);
+        }
     }
-
-    update_card(&card_list[0], dt);
 
     return;
 }
