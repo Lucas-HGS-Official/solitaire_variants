@@ -1,5 +1,7 @@
 #include "CardSet.h"
 
+#include <stdbool.h>
+
 #include "Sprite.h"
 
 
@@ -18,6 +20,8 @@ CardSet *init_cardset(void) {
 
     card_template.spr.dest_rec.width /= NUM_CARD_NUM;
     card_template.spr.dest_rec.height /= NUM_SUIT;
+
+    card_template.is_active = true;
 
     CardSet *new_set = MemAlloc(sizeof(CardSet));
 
