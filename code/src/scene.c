@@ -54,6 +54,7 @@ void update_scene(float dt) {
 }
 void draw_scene(void) {
     ClearBackground(SKYBLUE);
+    DrawFPS(10, 10);
 
     // draw_deck(deck);
     draw_slot(card_slot);
