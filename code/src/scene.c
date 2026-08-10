@@ -57,7 +57,11 @@ void draw_scene(void) {
 
     // draw_deck(deck);
     draw_slot(card_slot);
-    draw_card(&card_list[0]);
+    for (int i=0; i<MAX_CARDS; i++) {
+        if (card_list[i].is_active) {
+            draw_card(&card_list[i]);
+        }
+    }
 
     return;
 }
