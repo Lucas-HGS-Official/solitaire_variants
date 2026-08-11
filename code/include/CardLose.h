@@ -6,7 +6,7 @@
 #include <raymath.h>
 
 #include "CardSet.h"
-#include "Slot.h"
+#include "Pile.h"
 
 
 Card *init_card(Vector2 test_card_pile);

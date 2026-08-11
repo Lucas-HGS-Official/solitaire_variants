@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "CardSet.h"
-#include "Slot.h"
+#include "Pile.h"
 
 
 Pile *init_deck(CardSet *card_set, Vector2 deck_pos) {

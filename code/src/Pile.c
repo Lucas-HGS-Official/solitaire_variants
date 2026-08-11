@@ -1,4 +1,4 @@
-#include "Slot.h"
+#include "Pile.h"
 
 #include "CardLose.h"
 #include "CardSet.h"

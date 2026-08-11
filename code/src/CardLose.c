@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "CardSet.h"
-#include "Slot.h"
+#include "Pile.h"
 #include "Sprite.h"
 
 
