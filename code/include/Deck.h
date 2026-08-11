@@ -4,10 +4,10 @@
 #include "Slot.h"
 
 
-typedef Slot Deck;
+// typedef Slot Deck;
 
 
-Deck *init_deck(CardSet *card_set, Vector2 deck_pos);
-void update_deck(Deck *deck);
-void draw_deck(Deck *deck);
-void destroy_deck(Deck *deck);
+Slot *init_deck(CardSet *card_set, Vector2 deck_pos);
+void update_deck(Slot *deck);
+void draw_deck(Slot *deck);
+void destroy_deck(Slot *deck);
