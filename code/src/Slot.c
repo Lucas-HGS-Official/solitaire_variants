@@ -4,58 +4,58 @@
 #include "CardSet.h"
 
 
-Slot *init_slot(Vector2 slot_pos, CardSet *card_set) {
-    Slot *new_slot = MemAlloc(sizeof(Slot));
+Pile *init_pile(Vector2 pile_pos, CardSet *card_set) {
+    Pile *new_pile = MemAlloc(sizeof(Pile));
 
     for (int i=0; i<MAX_CARDS; i++) {
-        new_slot->pile[i] = (Card) {0};
+        new_pile->pile[i] = (Card) {0};
     }
-    new_slot->bottom = (Card) {0};
-    new_slot->top = (Card) {0};
-    new_slot->size = 0;
-    new_slot->is_faceup = true;
+    new_pile->bottom = (Card) {0};
+    new_pile->top = (Card) {0};
+    new_pile->size = 0;
+    new_pile->is_faceup = true;
 
-    new_slot->rect = card_set->blank.spr.dest_rec;
-    new_slot->rect.x = slot_pos.x;
-    new_slot->rect.y = slot_pos.y;
+    new_pile->rect = card_set->blank.spr.dest_rec;
+    new_pile->rect.x = pile_pos.x;
+    new_pile->rect.y = pile_pos.y;
 
-    return new_slot;
+    return new_pile;
 }
-void update_slot(Slot *slot) {
+void update_pile(Pile *pile) {
 
     return;
 }
-void draw_slot(Slot *slot) {
-    Rectangle slot_bg = slot->rect;
+void draw_pile(Pile *pile) {
+    Rectangle pile_bg = pile->rect;
 
-    DrawRectangleRec(slot_bg, RAYWHITE);
-    DrawRectangleLinesEx(slot_bg, 5.f, DARKBLUE);
+    DrawRectangleRec(pile_bg, RAYWHITE);
+    DrawRectangleLinesEx(pile_bg, 5.f, DARKBLUE);
 
-    if (slot->size) {
-        draw_card(&slot->top);
+    if (pile->size) {
+        draw_card(&pile->top);
     }
 
     return;
 }
-void destroy_slot(Slot *slot) {
-    MemFree(slot);
+void destroy_pile(Pile *pile) {
+    MemFree(pile);
 
     return;
 }
-void push_card_to_slot(Slot *slot, Card *card) {
+void push_card_to_pile(Pile *pile, Card *card) {
     if (!card->is_active) {
         return;
     }
     for (int i=0; i<MAX_CARDS; i++) {
-        if (!slot->pile[i].is_active) {
-            slot->pile[i] = *card;
-            slot->top = *card;
-            if (!slot->is_faceup) {
-                change_card_face(&slot->top, SPECIALS_NUM, DIAMONDS_SUIT);
+        if (!pile->pile[i].is_active) {
+            pile->pile[i] = *card;
+            pile->top = *card;
+            if (!pile->is_faceup) {
+                change_card_face(&pile->top, SPECIALS_NUM, DIAMONDS_SUIT);
             }
-            slot->top.spr.dest_rec.x = slot->rect.x;
-            slot->top.spr.dest_rec.y = slot->rect.y;
-            slot->size++;
+            pile->top.spr.dest_rec.x = pile->rect.x;
+            pile->top.spr.dest_rec.y = pile->rect.y;
+            pile->size++;
 
             card->is_active = false;
 
@@ -65,26 +65,26 @@ void push_card_to_slot(Slot *slot, Card *card) {
 
     return;
 }
-Card pop_card_from_slot(Slot *slot, CardSet *card_set) {
-    Card card_from_slot = {0};
+Card pop_card_from_pile(Pile *pile, CardSet *card_set) {
+    Card card_from_pile = {0};
 
     Card *top_card = {0};
     Card *new_top_card = {0};
     for (int i=0; i<MAX_CARDS; i++) {
-        if (!slot->pile[i].is_active) {
+        if (!pile->pile[i].is_active) {
             break;
         }
-        top_card = &slot->pile[i];
-        new_top_card = &slot->pile[i-1];
+        top_card = &pile->pile[i];
+        new_top_card = &pile->pile[i-1];
     }
-    card_from_slot = *top_card;
+    card_from_pile = *top_card;
     *top_card = (Card) {0};
-    slot->size--;
+    pile->size--;
 
-    slot->top = *new_top_card;
-    if (!slot->is_faceup) {
-        change_card_face(&slot->top, SPECIALS_NUM, DIAMONDS_SUIT);
+    pile->top = *new_top_card;
+    if (!pile->is_faceup) {
+        change_card_face(&pile->top, SPECIALS_NUM, DIAMONDS_SUIT);
     }
 
-    return card_from_slot;
+    return card_from_pile;
 }

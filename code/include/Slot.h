@@ -8,20 +8,20 @@
 #include "CardSet.h"
 
 
-typedef struct Slot {
+typedef struct Pile {
     Card pile[MAX_CARDS];
     Card top;
     Card bottom;
     Rectangle rect;
     int size;
     bool is_faceup;
-} Slot;
+} Pile;
 
 
-Slot *init_slot(Vector2 slot_pos, CardSet *card_set);
-void update_slot(Slot *slot);
-void draw_slot(Slot *slot);
-void destroy_slot(Slot *slot);
+Pile *init_pile(Vector2 pile_pos, CardSet *card_set);
+void update_pile(Pile *pile);
+void draw_pile(Pile *pile);
+void destroy_pile(Pile *pile);
 
-void push_card_to_slot(Slot *slot, Card *card);
-Card pop_card_from_slot(Slot *slot, CardSet *card_set);
+void push_card_to_pile(Pile *pile, Card *card);
+Card pop_card_from_pile(Pile *pile, CardSet *card_set);

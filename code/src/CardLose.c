@@ -9,12 +9,12 @@
 
 
 void _card_pickup(Card *card);
-void _move_card_to_slot(Card *card, float dt);
+void _move_card_to_pile(Card *card, float dt);
 
 
-Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Slot *test_card_slot) {
+Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Pile *test_card_pile) {
     Card new_card = card_set->cards[(suit+1) * num];
-    new_card.last_slot = (Vector2) { test_card_slot->rect.x, test_card_slot->rect.y };
+    new_card.last_pile = (Vector2) { test_card_pile->rect.x, test_card_pile->rect.y };
 
     return new_card;
 }
@@ -28,7 +28,7 @@ void draw_card(Card *card) {
 void update_card(Card *card, float dt) {
     if (card->is_active) {
         _card_pickup(card);
-        _move_card_to_slot(card, dt);
+        _move_card_to_pile(card, dt);
     }
 
     return;
@@ -56,18 +56,18 @@ void _card_pickup(Card *card) {
 
     return;
 }
-void _move_card_to_slot(Card *card, float dt) {
-    if (card->last_slot.x == 0 && card->last_slot.y == 0) {
+void _move_card_to_pile(Card *card, float dt) {
+    if (card->last_pile.x == 0 && card->last_pile.y == 0) {
         return;
     }
     Vector2 card_pos = { card->spr.dest_rec.x, card->spr.dest_rec.y };
-    if (Vector2Distance(card_pos, card->last_slot) < 10.f) {
-        card->spr.dest_rec.x = card->last_slot.x;
-        card->spr.dest_rec.y = card->last_slot.y;
+    if (Vector2Distance(card_pos, card->last_pile) < 10.f) {
+        card->spr.dest_rec.x = card->last_pile.x;
+        card->spr.dest_rec.y = card->last_pile.y;
 
         return;
     } else if (!card->is_pickup) {
-        card->direction = Vector2Normalize(Vector2Subtract(card->last_slot, card_pos));
+        card->direction = Vector2Normalize(Vector2Subtract(card->last_pile, card_pos));
 
         card->spr.dest_rec.x += card->direction.x * card->speed * dt;
         card->spr.dest_rec.y += card->direction.y * card->speed * dt;
