@@ -14,15 +14,18 @@ Card card_list[MAX_CARDS] = {0};
 CardSet *card_set = NULL;
 Pile *card_pile = NULL;
 Pile *deck = NULL;
+Slot *test_slot = NULL;
 
 
 void init_scene(void) {
     card_set = init_cardset();
 
-    deck = init_deck(card_set, (Vector2) { 25, 30 });
+    deck = init_deck(card_set, (Vector2) { 200, 150 });
     card_pile = init_pile((Vector2) { 900, 200 }, card_set);
+    test_slot = init_slot((Vector2) { 10, 10 }, card_set);
 
     card_list[0] = instance_card(card_set, CLUBS_SUIT, ACE_NUM, card_pile);
+    card_list[0].last_pile = (Vector2) { 10, 10 };
 
 
     return;
@@ -39,6 +42,7 @@ void update_scene(float dt) {
             }
         }
     }
+    update_slot(test_slot);
 
     if (IsKeyPressed(KEY_S)) {
         Vector2 mouse_pos = GetMousePosition();
@@ -70,6 +74,7 @@ void draw_scene(void) {
 
     draw_deck(deck);
     draw_pile(card_pile);
+    draw_slot(test_slot);
     for (int i=0; i<MAX_CARDS; i++) {
         if (card_list[i].is_active) {
             draw_card(&card_list[i]);
@@ -81,6 +86,7 @@ void draw_scene(void) {
 void destroy_scene(void) {
     destroy_pile(card_pile);
     destroy_deck(deck);
+    destroy_slot(test_slot);
 
     destroy_cardset(card_set);
 
