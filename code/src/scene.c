@@ -17,8 +17,8 @@ Pile *deck = NULL;
 Slot *test_slot = NULL;
 
 
-void init_scene(void) {
-    card_set = init_cardset();
+void init_scene(CardSet *resources_card_set) {
+    card_set = resources_card_set;
 
     deck = init_deck(card_set, (Vector2) { 200, 150 });
     card_pile = init_pile((Vector2) { 900, 200 }, card_set);
@@ -87,8 +87,6 @@ void destroy_scene(void) {
     destroy_pile(card_pile);
     destroy_deck(deck);
     destroy_slot(test_slot);
-
-    destroy_cardset(card_set);
 
     return;
 }

@@ -1,12 +1,17 @@
 #include "game.h"
 
+#include <stdlib.h>
+
 #include "settings.h"
 
+#include "CardSet.h"
 #include "scoundrel_scene.h"
 #include "scene.h"
 
 
 static SCENE_STATE current_scene = 0;
+
+static CardSet *card_set = NULL;
 
 
 void _update_game(float dt);
@@ -18,13 +23,14 @@ void game_init(void) {
     InitAudioDevice();
     SetTargetFPS(60);
     current_scene = SCOUNDREL_SCENE;
+    card_set = init_cardset();
 
     switch (current_scene) {
         case TEST_SCENE:
-            init_scene();
+            init_scene(card_set);
             break;
         case SCOUNDREL_SCENE:
-            init_scoundrel();
+            init_scoundrel(card_set);
             break;
         case SCENE_NUM:
             break;
@@ -53,6 +59,7 @@ void game_close(void) {
         case SCENE_NUM:
             break;
     }
+    destroy_cardset(card_set);
 
     CloseAudioDevice();
     CloseWindow();

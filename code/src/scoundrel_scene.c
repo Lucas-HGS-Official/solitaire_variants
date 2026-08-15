@@ -2,7 +2,6 @@
 
 #include <raylib.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "CardSet.h"
@@ -21,8 +20,8 @@ static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
 static void _draw_scoundrel_deck(Pile *deck);
 static void _destroy_soundrel_deck(Pile *deck);
 
-void init_scoundrel(void){
-    card_set = init_cardset();
+void init_scoundrel(CardSet *resources_card_set){
+    card_set = resources_card_set;
 
     deck = _init_scoundrel_deck(card_set, (Vector2) { 200, 150 });
 
@@ -60,7 +59,6 @@ static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos) {
         }
         Card card_to_push = card_set->cards[i];
         push_card_to_pile(new_deck, &card_to_push);
-        printf("\n added (%i, %i) \n", card_to_push.suit, card_to_push.num);
     }
 
     return new_deck;
