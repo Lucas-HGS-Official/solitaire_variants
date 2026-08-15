@@ -2,6 +2,7 @@
 
 #include "settings.h"
 
+#include "scoundrel_scene.h"
 #include "scene.h"
 
 
@@ -16,17 +17,18 @@ void game_init(void) {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_NAME);
     InitAudioDevice();
     SetTargetFPS(60);
-    current_scene = TEST_SCENE;
+    current_scene = SCOUNDREL_SCENE;
 
     switch (current_scene) {
         case TEST_SCENE:
             init_scene();
             break;
-
+        case SCOUNDREL_SCENE:
+            init_scoundrel();
+            break;
         case SCENE_NUM:
             break;
     }
-
 
     return;
 }
@@ -45,6 +47,9 @@ void game_close(void) {
         case TEST_SCENE:
             destroy_scene();
             break;
+        case SCOUNDREL_SCENE:
+            destroy_scoundrel();
+            break;
         case SCENE_NUM:
             break;
     }
@@ -61,6 +66,9 @@ void _update_game(float dt) {
         case TEST_SCENE:
             update_scene(dt);
             break;
+        case SCOUNDREL_SCENE:
+            update_scoundrel(dt);
+            break;
         case SCENE_NUM:
             break;
     }
@@ -72,6 +80,9 @@ void _draw_game(void) {
     switch (current_scene) {
         case TEST_SCENE:
             draw_scene();
+            break;
+        case SCOUNDREL_SCENE:
+            draw_scoundrel();
             break;
         case SCENE_NUM:
             break;
