@@ -14,7 +14,7 @@ void _move_card_to_pile(Card *card, float dt);
 
 Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Pile *test_card_pile) {
     Card new_card = card_set->cards[(suit+1) * num];
-    new_card.last_pile = (Vector2) { test_card_pile->rect.x, test_card_pile->rect.y };
+    new_card.placement = (Vector2) { test_card_pile->rect.x, test_card_pile->rect.y };
 
     return new_card;
 }
@@ -57,17 +57,17 @@ void _card_pickup(Card *card) {
     return;
 }
 void _move_card_to_pile(Card *card, float dt) {
-    if (card->last_pile.x == 0 && card->last_pile.y == 0) {
+    if (card->placement.x == 0 && card->placement.y == 0) {
         return;
     }
     Vector2 card_pos = { card->spr.dest_rec.x, card->spr.dest_rec.y };
-    if (Vector2Distance(card_pos, card->last_pile) < 10.f) {
-        card->spr.dest_rec.x = card->last_pile.x;
-        card->spr.dest_rec.y = card->last_pile.y;
+    if (Vector2Distance(card_pos, card->placement) < 10.f) {
+        card->spr.dest_rec.x = card->placement.x;
+        card->spr.dest_rec.y = card->placement.y;
 
         return;
     } else if (!card->is_pickup) {
-        card->direction = Vector2Normalize(Vector2Subtract(card->last_pile, card_pos));
+        card->direction = Vector2Normalize(Vector2Subtract(card->placement, card_pos));
 
         card->spr.dest_rec.x += card->direction.x * card->speed * dt;
         card->spr.dest_rec.y += card->direction.y * card->speed * dt;

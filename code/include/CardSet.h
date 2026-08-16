@@ -46,7 +46,7 @@ typedef struct Card {
     CARD_NUM num;
     CARD_SUIT suit;
     Vector2 mouse_xydelta;
-    Vector2 last_pile;
+    Vector2 placement;
     Vector2 direction;
     float speed;
     bool is_pickup;

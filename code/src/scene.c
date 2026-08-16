@@ -25,7 +25,7 @@ void init_scene(CardSet *resources_card_set) {
     test_slot = init_slot((Vector2) { 10, 10 }, card_set);
 
     card_list[0] = instance_card(card_set, CLUBS_SUIT, ACE_NUM, card_pile);
-    card_list[0].last_pile = (Vector2) { 10, 10 };
+    card_list[0].placement = (Vector2) { 10, 10 };
 
 
     return;
@@ -59,7 +59,7 @@ void update_scene(float dt) {
     for (int i=0; i<MAX_CARDS; i++) {
         if (card_list[i].is_active) {
             Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
-            if (Vector2Distance(card_pos, card_list[i].last_pile) <= 1.f && !card_list[i].is_pickup) {
+            if (Vector2Distance(card_pos, card_list[i].placement) <= 1.f && !card_list[i].is_pickup) {
                 push_card_to_pile(card_pile, &card_list[i]);
             }
             update_card(&card_list[i], dt);
