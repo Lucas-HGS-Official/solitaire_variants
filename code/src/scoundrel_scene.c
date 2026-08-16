@@ -48,7 +48,7 @@ static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos) {
     new_deck = init_pile(deck_pos, card_set);
     new_deck->is_faceup = false;
 
-    for (int i=0; i<DECK_SIZE-1; i++) {
+    for (int i=0; i<DECK_SIZE; i++) {
         if (
             (card_set->cards[i].suit == HEARTS_SUIT ||
             card_set->cards[i].suit == DIAMONDS_SUIT) &&
@@ -60,6 +60,7 @@ static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos) {
         Card card_to_push = card_set->cards[i];
         push_card_to_pile(new_deck, &card_to_push);
     }
+    shuffle_pile(new_deck);
 
     return new_deck;
 }
