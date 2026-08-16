@@ -1,7 +1,9 @@
 #include "Pile.h"
 
-#include "CardLose.h"
+#include <raylib.h>
+
 #include "CardSet.h"
+#include "CardLose.h"
 
 
 Pile *init_pile(Vector2 pile_pos, CardSet *card_set) {
@@ -87,6 +89,17 @@ Card pop_card_from_pile(Pile *pile, CardSet *card_set) {
     }
 
     return card_from_pile;
+}
+void shuffle_pile(Pile *pile) {
+    if (pile->size > 1) {
+        for (int i=0; i < pile->size-1; i++) {
+            int j = GetRandomValue(0, i);
+
+            Card card_temp = pile->pile[j];
+            pile->pile[j] = pile->pile[i];
+            pile->pile[i] = card_temp;
+        }
+    }
 }
 
 

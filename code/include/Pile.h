@@ -32,6 +32,7 @@ void destroy_pile(Pile *pile);
 
 void push_card_to_pile(Pile *pile, Card *card);
 Card pop_card_from_pile(Pile *pile, CardSet *card_set);
+void shuffle_pile(Pile *pile);
 
 
 Slot *init_slot(Vector2 slot_pos, CardSet *card_set);
