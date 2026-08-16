@@ -4,7 +4,6 @@
 #include <stdbool.h>
 
 #include "CardSet.h"
-#include "Pile.h"
 #include "Sprite.h"
 
 
@@ -12,9 +11,9 @@ void _card_pickup(Card *card);
 void _move_card_to_pile(Card *card, float dt);
 
 
-Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Pile *test_card_pile) {
+Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Vector2 card_placement) {
     Card new_card = card_set->cards[(suit+1) * num];
-    new_card.placement = (Vector2) { test_card_pile->rect.x, test_card_pile->rect.y };
+    new_card.placement = card_placement;
 
     return new_card;
 }

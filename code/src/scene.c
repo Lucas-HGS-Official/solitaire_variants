@@ -24,7 +24,8 @@ void init_scene(CardSet *resources_card_set) {
     card_pile = init_pile((Vector2) { 900, 200 }, card_set);
     test_slot = init_slot((Vector2) { 10, 10 }, card_set);
 
-    card_list[0] = instance_card(card_set, CLUBS_SUIT, ACE_NUM, card_pile);
+    Vector2 pile_pos = (Vector2) { card_pile->rect.x, card_pile->rect.y };
+    card_list[0] = instance_card(card_set, CLUBS_SUIT, ACE_NUM, pile_pos);
     card_list[0].placement = (Vector2) { 10, 10 };
 
 
@@ -50,20 +51,22 @@ void update_scene(float dt) {
         int rand_num = GetRandomValue(ACE_NUM, KING_NUM);
         for (int i=0; i<MAX_CARDS; i++) {
             if (!card_list[i].is_active) {
-                card_list[i] = instance_card(card_set, rand_suit, rand_num, card_pile);
+                Vector2 pile_pos = (Vector2) { card_pile->rect.x, card_pile->rect.y };
+                card_list[i] = instance_card(card_set, rand_suit, rand_num, pile_pos);
                 break;
             }
         }
     }
 
     for (int i=0; i<MAX_CARDS; i++) {
-        if (card_list[i].is_active) {
-            Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
-            if (Vector2Distance(card_pos, card_list[i].placement) <= 1.f && !card_list[i].is_pickup) {
-                push_card_to_pile(card_pile, &card_list[i]);
-            }
-            update_card(&card_list[i], dt);
+        if (!card_list[i].is_active) {
+            continue;
         }
+        Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
+        if (Vector2Distance(card_pos, card_list[i].placement) <= 1.f && !card_list[i].is_pickup) {
+            push_card_to_pile(card_pile, &card_list[i]);
+        }
+        update_card(&card_list[i], dt);
     }
 
     return;
