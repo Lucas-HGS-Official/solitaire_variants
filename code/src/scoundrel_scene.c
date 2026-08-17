@@ -23,7 +23,13 @@ static void _destroy_soundrel_deck(Pile *deck_dungeon);
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
 
-    deck_dungeon = _init_scoundrel_deck(card_set, (Vector2) { 200, 150 });
+    deck_dungeon = _init_scoundrel_deck(card_set, (Vector2) { .x=200, .y=150 });
+    Vector2 discard_pile_pos = {
+        .x=deck_dungeon->rect.x+deck_dungeon->rect.width*6,
+        .y=deck_dungeon->rect.y,
+    };
+
+    discard_pile = init_pile(discard_pile_pos, card_set);
 
     return;
 }
@@ -35,9 +41,11 @@ void draw_scoundrel(void) {
     DrawFPS(10, 10);
 
     _draw_scoundrel_deck(deck_dungeon);
+    draw_pile(discard_pile);
 }
 void destroy_scoundrel(void) {
     _destroy_soundrel_deck(deck_dungeon);
+    destroy_pile(discard_pile);
 
     return;
 }
