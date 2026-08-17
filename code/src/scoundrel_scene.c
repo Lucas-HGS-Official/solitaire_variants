@@ -11,19 +11,19 @@
 
 static Card card_list[MAX_CARDS] = {0};
 static CardSet *card_set = NULL;
-static Pile *card_pile = NULL;
-static Pile *deck = NULL;
+static Pile *discard_pile = NULL;
+static Pile *deck_dungeon = NULL;
 static Slot *test_slot = NULL;
 
 
 static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
-static void _draw_scoundrel_deck(Pile *deck);
-static void _destroy_soundrel_deck(Pile *deck);
+static void _draw_scoundrel_deck(Pile *deck_dungeon);
+static void _destroy_soundrel_deck(Pile *deck_dungeon);
 
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
 
-    deck = _init_scoundrel_deck(card_set, (Vector2) { 200, 150 });
+    deck_dungeon = _init_scoundrel_deck(card_set, (Vector2) { 200, 150 });
 
     return;
 }
@@ -34,10 +34,10 @@ void draw_scoundrel(void) {
     ClearBackground(SKYBLUE);
     DrawFPS(10, 10);
 
-    _draw_scoundrel_deck(deck);
+    _draw_scoundrel_deck(deck_dungeon);
 }
 void destroy_scoundrel(void) {
-    _destroy_soundrel_deck(deck);
+    _destroy_soundrel_deck(deck_dungeon);
 
     return;
 }
@@ -64,13 +64,13 @@ static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos) {
 
     return new_deck;
 }
-void _draw_scoundrel_deck(Pile *deck) {
-    draw_pile(deck);
+void _draw_scoundrel_deck(Pile *deck_dungeon) {
+    draw_pile(deck_dungeon);
 
     return;
 }
-void _destroy_soundrel_deck(Pile *deck) {
-    destroy_pile(deck);
+void _destroy_soundrel_deck(Pile *deck_dungeon) {
+    destroy_pile(deck_dungeon);
 
     return;
 }
