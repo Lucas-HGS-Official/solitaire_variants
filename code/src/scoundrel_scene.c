@@ -9,11 +9,14 @@
 #include "Pile.h"
 
 
+#define MAX_ROOM 4
+
+
 static Card card_list[MAX_CARDS] = {0};
 static CardSet *card_set = NULL;
 static Pile *discard_pile = NULL;
 static Pile *deck_dungeon = NULL;
-static Slot *test_slot = NULL;
+static Slot dungeon_room[MAX_ROOM] = {0};
 
 
 static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
@@ -24,12 +27,18 @@ void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
 
     deck_dungeon = _init_scoundrel_deck(card_set, (Vector2) { .x=200, .y=150 });
-    Vector2 discard_pile_pos = {
-        .x=deck_dungeon->rect.x+deck_dungeon->rect.width*6,
-        .y=deck_dungeon->rect.y,
-    };
 
+    Rectangle deck_rect = deck_dungeon->rect;
+
+    Vector2 discard_pile_pos = { .x=deck_rect.x+9+deck_rect.width*7, .y=deck_rect.y };
     discard_pile = init_pile(discard_pile_pos, card_set);
+
+    Vector2 room_pos = { .x=deck_rect.x+deck_rect.width*2, .y=deck_rect.y };
+    for (int i=0; i<MAX_ROOM; i++) {
+        // Slot *new_room = ;
+        dungeon_room[i] = *init_slot(room_pos, card_set);
+        room_pos.x +=deck_rect.width+3;
+    }
 
     return;
 }
@@ -42,6 +51,10 @@ void draw_scoundrel(void) {
 
     _draw_scoundrel_deck(deck_dungeon);
     draw_pile(discard_pile);
+
+    for (int i=0; i<MAX_ROOM; i++) {
+        draw_slot(&dungeon_room[i]);
+    }
 }
 void destroy_scoundrel(void) {
     _destroy_soundrel_deck(deck_dungeon);
