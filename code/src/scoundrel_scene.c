@@ -1,6 +1,7 @@
 #include "scoundrel_scene.h"
 
 #include <raylib.h>
+#include <raymath.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -9,14 +10,18 @@
 #include "Pile.h"
 
 
-#define MAX_ROOM 4
+#define ROOM_SIZE 4
+#define NEW_CARD_TIME .5f
 
 
 static Card card_list[MAX_CARDS] = {0};
 static CardSet *card_set = NULL;
 static Pile *discard_pile = NULL;
 static Pile *deck_dungeon = NULL;
-static Slot dungeon_room[MAX_ROOM] = {0};
+static Slot dungeon_room[ROOM_SIZE] = {0};
+static float new_card_timer = NEW_CARD_TIME;
+static bool is_room_to_be_filled = false;
+static Vector2 empty_room_slots[ROOM_SIZE] = {0};
 
 
 static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
@@ -34,8 +39,7 @@ void init_scoundrel(CardSet *resources_card_set){
     discard_pile = init_pile(discard_pile_pos, card_set);
 
     Vector2 room_pos = { .x=deck_rect.x+deck_rect.width*2, .y=deck_rect.y };
-    for (int i=0; i<MAX_ROOM; i++) {
-        // Slot *new_room = ;
+    for (int i=0; i<ROOM_SIZE; i++) {
         dungeon_room[i] = *init_slot(room_pos, card_set);
         room_pos.x +=deck_rect.width+3;
     }
@@ -43,6 +47,49 @@ void init_scoundrel(CardSet *resources_card_set){
     return;
 }
 void update_scoundrel(float dt) {
+    int empty_rooms = 0;
+    for (int i=0; i<ROOM_SIZE; i++) {
+        if (!dungeon_room[i].card.is_active) {
+            empty_rooms++;
+            if (!is_room_to_be_filled) {
+                empty_room_slots[i].x = dungeon_room[i].rect.x;
+                empty_room_slots[i].y = dungeon_room[i].rect.y;
+            }
+        }
+    }
+    if (empty_rooms > 2) {
+        is_room_to_be_filled = true;
+    }
+    if (is_room_to_be_filled) {
+        new_card_timer -= dt;
+    }
+    if (new_card_timer <= 0) {
+        new_card_timer = NEW_CARD_TIME;
+        for (int i=0; i<MAX_CARDS; i++) {
+            if (card_list[i].is_active) {
+                continue;
+            }
+            card_list[i] = pop_card_from_pile(deck_dungeon);
+            for (int j=0; j<ROOM_SIZE; j++) {
+                if (Vector2Equals(empty_room_slots[j], Vector2Zero())) {
+                    continue;
+                } else {
+                    card_list[i].placement = empty_room_slots[j];
+                    empty_room_slots[j] = Vector2Zero();
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    if (empty_rooms == 0) {
+        is_room_to_be_filled = false;
+    }
+
+    for (int i=0; i<MAX_CARDS; i++) {
+        update_card(&card_list[i], dt);
+    }
+
     return;
 }
 void draw_scoundrel(void) {
@@ -52,8 +99,12 @@ void draw_scoundrel(void) {
     _draw_scoundrel_deck(deck_dungeon);
     draw_pile(discard_pile);
 
-    for (int i=0; i<MAX_ROOM; i++) {
+    for (int i=0; i<ROOM_SIZE; i++) {
         draw_slot(&dungeon_room[i]);
+    }
+
+    for (int i=0; i<MAX_CARDS; i++) {
+        draw_card(&card_list[i]);
     }
 }
 void destroy_scoundrel(void) {
