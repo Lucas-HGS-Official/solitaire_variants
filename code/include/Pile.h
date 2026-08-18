@@ -31,7 +31,7 @@ void draw_pile(Pile *pile);
 void destroy_pile(Pile *pile);
 
 void push_card_to_pile(Pile *pile, Card *card);
-Card pop_card_from_pile(Pile *pile, CardSet *card_set);
+Card pop_card_from_pile(Pile *pile);
 void shuffle_pile(Pile *pile);
 
 
@@ -41,4 +41,4 @@ void draw_slot(Slot *slot);
 void destroy_slot(Slot *slot);
 
 void put_card_in_slot(Slot *slot, Card *card);
-Card take_card_from_slot(Slot *slot, CardSet *card_set);
+Card take_card_from_slot(Slot *slot);

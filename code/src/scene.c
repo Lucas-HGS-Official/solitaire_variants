@@ -36,7 +36,7 @@ void update_scene(float dt) {
         if (CheckCollisionPointRec(GetMousePosition(), card_pile->rect)) {
             for (int i=0; i<MAX_CARDS; i++) {
                 if (!card_list[i].is_active) {
-                    card_list[i] = pop_card_from_pile(card_pile, card_set);
+                    card_list[i] = pop_card_from_pile(card_pile);
                     card_list[i].is_pickup = true;
                     break;
                 }

@@ -1,6 +1,7 @@
 #include "Pile.h"
 
 #include <raylib.h>
+#include <stdbool.h>
 
 #include "CardSet.h"
 #include "CardLose.h"
@@ -50,6 +51,7 @@ void push_card_to_pile(Pile *pile, Card *card) {
     }
     for (int i=0; i<MAX_CARDS; i++) {
         if (!pile->pile[i].is_active) {
+            card->spr.dest_rec = pile->rect;
             pile->pile[i] = *card;
             pile->top = *card;
             if (!pile->is_faceup) {
@@ -59,7 +61,7 @@ void push_card_to_pile(Pile *pile, Card *card) {
             pile->top.spr.dest_rec.y = pile->rect.y;
             pile->size++;
 
-            card->is_active = false;
+            // card->is_active = true;
 
             break;
         }
@@ -67,7 +69,7 @@ void push_card_to_pile(Pile *pile, Card *card) {
 
     return;
 }
-Card pop_card_from_pile(Pile *pile, CardSet *card_set) {
+Card pop_card_from_pile(Pile *pile) {
     Card card_from_pile = {0};
 
     Card *top_card = {0};
@@ -149,12 +151,12 @@ void put_card_in_slot(Slot *slot, Card *card) {
         slot->card.spr.dest_rec.x = slot->rect.x;
         slot->card.spr.dest_rec.y = slot->rect.y;
 
-        card->is_active = false;
+        // card->is_active = true;
     }
 
     return;
 }
-Card take_card_from_slot(Slot *slot, CardSet *card_set) {
+Card take_card_from_slot(Slot *slot) {
     Card card_from_slot = {0};
     card_from_slot = slot->card;
     slot->card = (Card) {0};
