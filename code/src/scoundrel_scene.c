@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "CardSet.h"
@@ -82,11 +83,24 @@ void update_scoundrel(float dt) {
             break;
         }
     }
+    // printf("\n %i \n", empty_rooms);
     if (empty_rooms == 0) {
         is_room_to_be_filled = false;
     }
 
     for (int i=0; i<MAX_CARDS; i++) {
+        if (!card_list[i].is_active) {
+            continue;
+        }
+        Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
+        for (int j=0; j<ROOM_SIZE; j++) {
+            if (Vector2Distance(card_pos, card_list[i].placement) > 1.f || card_list[i].is_pickup) {
+                continue;
+            }
+            if (CheckCollisionRecs(card_list[i].spr.dest_rec, dungeon_room[j].rect)) {
+                put_card_in_slot(&dungeon_room[j], &card_list[i]);
+            }
+        }
         update_card(&card_list[i], dt);
     }
 
