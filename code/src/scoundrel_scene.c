@@ -3,7 +3,6 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "CardSet.h"
@@ -83,7 +82,6 @@ void update_scoundrel(float dt) {
             break;
         }
     }
-    // printf("\n %i \n", empty_rooms);
     if (empty_rooms == 0) {
         is_room_to_be_filled = false;
     }

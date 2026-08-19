@@ -61,8 +61,6 @@ void push_card_to_pile(Pile *pile, Card *card) {
             pile->top.spr.dest_rec.y = pile->rect.y;
             pile->size++;
 
-            // card->is_active = true;
-
             break;
         }
     }
@@ -150,8 +148,6 @@ void put_card_in_slot(Slot *slot, Card *card) {
         slot->card = *card;
         slot->card.spr.dest_rec.x = slot->rect.x;
         slot->card.spr.dest_rec.y = slot->rect.y;
-
-        // card->is_active = true;
     }
 
     return;
