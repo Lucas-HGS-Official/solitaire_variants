@@ -154,6 +154,8 @@ void draw_scoundrel(void) {
     for (int i=0; i<MAX_CARDS; i++) {
         draw_card(&card_list[i]);
     }
+
+    DrawText(TextFormat("LP: %i", life_points), discard_pile->rect.x, discard_pile->rect.y*2+30, 30, WHITE);
 }
 void destroy_scoundrel(void) {
     _destroy_soundrel_deck(deck_dungeon);
