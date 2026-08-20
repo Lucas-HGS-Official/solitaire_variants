@@ -36,6 +36,7 @@ typedef enum SCOUNDREL_CARD_VALUE {
 
 #define ROOM_SIZE 4
 #define NEW_CARD_TIME .5f
+#define MAX_LIFE 20
 
 
 static Card card_list[MAX_CARDS] = {0};
@@ -46,6 +47,7 @@ static Slot dungeon_room[ROOM_SIZE] = {0};
 static float new_card_timer = NEW_CARD_TIME;
 static bool is_room_to_be_filled = false;
 static Vector2 empty_room_slots[ROOM_SIZE] = {0};
+static int life_points = 0;
 
 
 static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
@@ -67,6 +69,7 @@ void init_scoundrel(CardSet *resources_card_set){
         dungeon_room[i] = *init_slot(room_pos, card_set);
         room_pos.x +=deck_rect.width+3;
     }
+    life_points = MAX_LIFE;
 
     return;
 }
