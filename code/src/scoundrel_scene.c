@@ -44,6 +44,7 @@ static CardSet *card_set = NULL;
 static Pile *discard_pile = NULL;
 static Pile *deck_dungeon = NULL;
 static Slot dungeon_room[ROOM_SIZE] = {0};
+static Slot *weapon_slot = NULL;
 static float new_card_timer = NEW_CARD_TIME;
 static bool is_room_to_be_filled = false;
 static Vector2 empty_room_slots[ROOM_SIZE] = {0};
@@ -69,6 +70,12 @@ void init_scoundrel(CardSet *resources_card_set){
         dungeon_room[i] = *init_slot(room_pos, card_set);
         room_pos.x +=deck_rect.width+3;
     }
+
+    Vector2 weapon_pos = {
+        .x=deck_rect.x+(discard_pile_pos.x-deck_rect.x)/2,
+        .y=deck_rect.y*2,
+    };
+    weapon_slot = init_slot(weapon_pos, card_set);
     life_points = MAX_LIFE;
 
     return;
@@ -142,6 +149,8 @@ void draw_scoundrel(void) {
         draw_slot(&dungeon_room[i]);
     }
 
+    draw_slot(weapon_slot);
+
     for (int i=0; i<MAX_CARDS; i++) {
         draw_card(&card_list[i]);
     }
@@ -149,6 +158,7 @@ void draw_scoundrel(void) {
 void destroy_scoundrel(void) {
     _destroy_soundrel_deck(deck_dungeon);
     destroy_pile(discard_pile);
+    destroy_slot(weapon_slot);
 
     return;
 }
