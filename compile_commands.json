@@ -5,11 +5,115 @@
       "-c",
       "-Icode/include",
       "-o",
+      "code/obj/CardLose.o",
+      "code/src/CardLose.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/CardLose.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/CardLose.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/CardSet.o",
+      "code/src/CardSet.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/CardSet.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/CardSet.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/Deck.o",
+      "code/src/Deck.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/Deck.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/Deck.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/game.o",
+      "code/src/game.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/game.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/game.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
       "code/obj/main.o",
       "code/src/main.c"
     ],
     "directory": "/home/lhgs/dev/C/solitaire_variants",
     "file": "/home/lhgs/dev/C/solitaire_variants/code/src/main.c",
     "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/Pile.o",
+      "code/src/Pile.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/Pile.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/Pile.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/scene.o",
+      "code/src/scene.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/scene.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/scene.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/scoundrel_scene.o",
+      "code/src/scoundrel_scene.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/scoundrel_scene.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/scoundrel_scene.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/Sprite.o",
+      "code/src/Sprite.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/Sprite.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/Sprite.o"
   }
 ]
