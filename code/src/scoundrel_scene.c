@@ -54,8 +54,9 @@ static int life_points = 0;
 static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
 static void _draw_scoundrel_deck(Pile *deck_dungeon);
 static void _destroy_soundrel_deck(Pile *deck_dungeon);
-static void _filling_the_room(float dt);
+static void _fill_room(float dt);
 static void _update_all_cards(float dt);
+static void _update_room(float dt);
 
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
@@ -83,7 +84,7 @@ void init_scoundrel(CardSet *resources_card_set){
     return;
 }
 void update_scoundrel(float dt) {
-    _filling_the_room(dt);
+    _update_room(dt);
     _update_all_cards(dt);
 
     return;
@@ -147,7 +148,7 @@ void _destroy_soundrel_deck(Pile *deck_dungeon) {
 
     return;
 }
-void _filling_the_room(float dt) {
+void _fill_room(float dt) {
     int empty_rooms = 0;
     for (int i=0; i<ROOM_SIZE; i++) {
         if (!dungeon_room[i].card.is_active) {
@@ -204,6 +205,31 @@ void _update_all_cards(float dt) {
             }
         }
         update_card(&card_list[i], dt);
+    }
+
+    return;
+}
+void _update_room(float dt) {
+    _fill_room(dt);
+
+    for (int i=0; i<ROOM_SIZE; i++) {
+        if (!dungeon_room[i].card.is_active) {
+            continue;
+        }
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            if (CheckCollisionPointRec(GetMousePosition(), dungeon_room[i].rect)) {
+                for (int j=0; j<MAX_CARDS; j++) {
+                    if (card_list[i].is_active) {
+                        continue;
+                    } else {
+                        card_list[i] = take_card_from_slot(&dungeon_room[i]);
+                        card_list[i].is_pickup = true;
+
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     return;
