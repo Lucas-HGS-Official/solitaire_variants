@@ -10,6 +10,13 @@
 #include "Pile.h"
 
 
+typedef enum PHASE_STATE {
+    DRAW_PHASE,
+    MAIN_PHASE,
+
+    PHASES_NUM,
+} PHASE_STATE;
+
 typedef enum SCOUNDREL_CARD_TYPE {
     HEALTH_POTION_TYPE = HEARTS_SUIT,
     WEAPON_TYPE = DIAMONDS_SUIT,
@@ -49,6 +56,7 @@ static float new_card_timer = NEW_CARD_TIME;
 static bool is_room_to_be_filled = false;
 static Vector2 empty_room_slots[ROOM_SIZE] = {0};
 static int life_points = 0;
+static PHASE_STATE current_phase = 0;
 
 
 static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
@@ -80,6 +88,8 @@ void init_scoundrel(CardSet *resources_card_set){
     };
     weapon_slot = init_slot(weapon_pos, card_set);
     life_points = MAX_LIFE;
+
+    current_phase = DRAW_PHASE;
 
     return;
 }
@@ -186,6 +196,7 @@ void _fill_room(float dt) {
     }
     if (empty_rooms == 0) {
         is_room_to_be_filled = false;
+        current_phase = MAIN_PHASE;
     }
 
     return;
@@ -210,27 +221,36 @@ void _update_all_cards(float dt) {
     return;
 }
 void _update_room(float dt) {
-    _fill_room(dt);
+    switch (current_phase) {
+        case DRAW_PHASE:
+            _fill_room(dt);
+            break;
+        case MAIN_PHASE:
+            for (int i=0; i<ROOM_SIZE; i++) {
+                if (!dungeon_room[i].card.is_active) {
+                    continue;
+                }
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                    if (CheckCollisionPointRec(GetMousePosition(), dungeon_room[i].rect)) {
+                        for (int j=0; j<MAX_CARDS; j++) {
+                            if (card_list[i].is_active) {
+                                continue;
+                            } else {
+                                card_list[i] = take_card_from_slot(&dungeon_room[i]);
+                                card_list[i].is_pickup = true;
 
-    for (int i=0; i<ROOM_SIZE; i++) {
-        if (!dungeon_room[i].card.is_active) {
-            continue;
-        }
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            if (CheckCollisionPointRec(GetMousePosition(), dungeon_room[i].rect)) {
-                for (int j=0; j<MAX_CARDS; j++) {
-                    if (card_list[i].is_active) {
-                        continue;
-                    } else {
-                        card_list[i] = take_card_from_slot(&dungeon_room[i]);
-                        card_list[i].is_pickup = true;
-
-                        break;
+                                break;
+                            }
+                        }
                     }
                 }
             }
-        }
+            break;
+        case PHASES_NUM:
+            break;
     }
+
+
 
     return;
 }
