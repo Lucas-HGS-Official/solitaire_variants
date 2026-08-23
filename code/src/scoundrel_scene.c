@@ -241,17 +241,20 @@ void _update_room(float dt) {
     return;
 }
 void _update_card_in_room(Slot *room) {
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        if (CheckCollisionPointRec(GetMousePosition(), room->rect)) {
-            for (int j=0; j<MAX_CARDS; j++) {
-                if (card_list[j].is_active) {
-                    continue;
-                } else {
-                    card_list[j] = take_card_from_slot(room);
-                    card_list[j].is_pickup = true;
+    bool is_collision_mouse_slot = CheckCollisionPointRec(GetMousePosition(), room->rect);
+    bool is_left_mouse_pressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
-                    break;
-                }
+    bool is_slot_clicked = is_left_mouse_pressed && is_collision_mouse_slot;
+
+    if (is_slot_clicked) {
+        for (int j=0; j<MAX_CARDS; j++) {
+            if (card_list[j].is_active) {
+                continue;
+            } else {
+                card_list[j] = take_card_from_slot(room);
+                card_list[j].is_pickup = true;
+
+                break;
             }
         }
     }
