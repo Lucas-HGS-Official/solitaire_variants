@@ -65,6 +65,7 @@ static void _destroy_soundrel_deck(Pile *deck_dungeon);
 static void _fill_room(float dt);
 static void _update_all_cards(float dt);
 static void _update_room(float dt);
+static void _update_card_in_room(Slot *room);
 
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
@@ -230,27 +231,28 @@ void _update_room(float dt) {
                 if (!dungeon_room[i].card.is_active) {
                     continue;
                 }
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                    if (CheckCollisionPointRec(GetMousePosition(), dungeon_room[i].rect)) {
-                        for (int j=0; j<MAX_CARDS; j++) {
-                            if (card_list[i].is_active) {
-                                continue;
-                            } else {
-                                card_list[i] = take_card_from_slot(&dungeon_room[i]);
-                                card_list[i].is_pickup = true;
-
-                                break;
-                            }
-                        }
-                    }
-                }
+                _update_card_in_room(&dungeon_room[i]);
             }
             break;
         case PHASES_NUM:
             break;
     }
 
-
-
     return;
+}
+void _update_card_in_room(Slot *room) {
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (CheckCollisionPointRec(GetMousePosition(), room->rect)) {
+            for (int j=0; j<MAX_CARDS; j++) {
+                if (card_list[j].is_active) {
+                    continue;
+                } else {
+                    card_list[j] = take_card_from_slot(room);
+                    card_list[j].is_pickup = true;
+
+                    break;
+                }
+            }
+        }
+    }
 }
