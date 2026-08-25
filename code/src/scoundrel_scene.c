@@ -68,6 +68,7 @@ static void _fill_room(float dt);
 static void _update_all_cards(float dt);
 static void _update_room(float dt);
 static void _update_card_in_room(Slot *room);
+void _avoid_room(void);
 
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
@@ -239,24 +240,7 @@ void _update_room(float dt) {
                 current_phase = MAIN_PHASE;
             }
             if (IsKeyPressed(KEY_A)) {
-                Pile temp = {0};
-                for (int i=0; i<MAX_CARDS; i++) {
-                    if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
-                    if (i<ROOM_SIZE) {
-                        temp.pile[i] = dungeon_room[i].card;
-                        take_card_from_slot(&dungeon_room[i]);
-                        continue;
-                    }
-                    temp.pile[i] = deck_dungeon->pile[i-ROOM_SIZE];
-                }
-                for (int i=0; i<MAX_CARDS; i++) {
-                    if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
-                    deck_dungeon->pile[i] = temp.pile[i];
-                }
-                deck_dungeon->size += ROOM_SIZE;
-
-                current_phase = DRAW_PHASE;
-                is_room_avoidable = false;
+                _avoid_room();
             }
             break;
 
@@ -294,4 +278,24 @@ void _update_card_in_room(Slot *room) {
             }
         }
     }
+}
+void _avoid_room(void) {
+    Pile temp = {0};
+    for (int i=0; i<MAX_CARDS; i++) {
+        if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
+        if (i<ROOM_SIZE) {
+            temp.pile[i] = dungeon_room[i].card;
+            take_card_from_slot(&dungeon_room[i]);
+            continue;
+        }
+        temp.pile[i] = deck_dungeon->pile[i-ROOM_SIZE];
+    }
+    for (int i=0; i<MAX_CARDS; i++) {
+        if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
+        deck_dungeon->pile[i] = temp.pile[i];
+    }
+    deck_dungeon->size += ROOM_SIZE;
+
+    current_phase = DRAW_PHASE;
+    is_room_avoidable = false;
 }
