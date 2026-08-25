@@ -3,7 +3,6 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
-// #include <stdio.h>
 #include <stdlib.h>
 
 #include "CardSet.h"
@@ -59,6 +58,7 @@ static bool is_room_to_be_filled = false;
 static Vector2 empty_room_slots[ROOM_SIZE] = {0};
 static int life_points = 0;
 static PHASE_STATE current_phase = 0;
+static bool is_room_avoidable = true;
 
 
 static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos);
@@ -92,6 +92,7 @@ void init_scoundrel(CardSet *resources_card_set){
     weapon_slot = init_slot(weapon_pos, card_set);
     life_points = MAX_LIFE;
 
+    is_room_avoidable = true;
     current_phase = DRAW_PHASE;
 
     return;
@@ -199,7 +200,11 @@ void _fill_room(float dt) {
     }
     if (empty_rooms == 0) {
         is_room_to_be_filled = false;
-        current_phase = KEEP_PHASE;
+        if (is_room_avoidable) {
+            current_phase = KEEP_PHASE;
+        } else {
+            current_phase = MAIN_PHASE;
+        }
     }
 
     return;
@@ -231,22 +236,18 @@ void _update_room(float dt) {
 
         case KEEP_PHASE:
             if (IsKeyPressed(KEY_F)) {
-                // printf("\n face room \n");
                 current_phase = MAIN_PHASE;
             }
             if (IsKeyPressed(KEY_A)) {
-                // printf("\n avoid room \n");
                 Pile temp = {0};
                 for (int i=0; i<MAX_CARDS; i++) {
                     if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
                     if (i<ROOM_SIZE) {
                         temp.pile[i] = dungeon_room[i].card;
                         take_card_from_slot(&dungeon_room[i]);
-                        // printf("\n temp %i=(num=%i, suit=%i) \n", i, temp.pile[i].num, temp.pile[i].suit);
                         continue;
                     }
                     temp.pile[i] = deck_dungeon->pile[i-ROOM_SIZE];
-                    // printf("\n temp %i=(num=%i, suit=%i)\n seck %i=(num=%i, suit=%i) \n", i, temp.pile[i].num, temp.pile[i].suit, i-ROOM_SIZE, deck_dungeon->pile[i-ROOM_SIZE].num, deck_dungeon->pile[i-ROOM_SIZE].suit);
                 }
                 for (int i=0; i<MAX_CARDS; i++) {
                     if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
@@ -255,6 +256,7 @@ void _update_room(float dt) {
                 deck_dungeon->size += ROOM_SIZE;
 
                 current_phase = DRAW_PHASE;
+                is_room_avoidable = false;
             }
             break;
 
@@ -265,6 +267,7 @@ void _update_room(float dt) {
                 }
                 _update_card_in_room(&dungeon_room[i]);
             }
+            is_room_avoidable = true;
             break;
 
         case PHASES_NUM:
