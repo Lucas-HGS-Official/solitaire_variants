@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
+// #include <stdio.h>
 #include <stdlib.h>
 
 #include "CardSet.h"
@@ -12,6 +13,7 @@
 
 typedef enum PHASE_STATE {
     DRAW_PHASE,
+    KEEP_PHASE,
     MAIN_PHASE,
 
     PHASES_NUM,
@@ -197,7 +199,7 @@ void _fill_room(float dt) {
     }
     if (empty_rooms == 0) {
         is_room_to_be_filled = false;
-        current_phase = MAIN_PHASE;
+        current_phase = KEEP_PHASE;
     }
 
     return;
@@ -226,6 +228,36 @@ void _update_room(float dt) {
         case DRAW_PHASE:
             _fill_room(dt);
             break;
+
+        case KEEP_PHASE:
+            if (IsKeyPressed(KEY_F)) {
+                // printf("\n face room \n");
+                current_phase = MAIN_PHASE;
+            }
+            if (IsKeyPressed(KEY_A)) {
+                // printf("\n avoid room \n");
+                Pile temp = {0};
+                for (int i=0; i<MAX_CARDS; i++) {
+                    if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
+                    if (i<ROOM_SIZE) {
+                        temp.pile[i] = dungeon_room[i].card;
+                        take_card_from_slot(&dungeon_room[i]);
+                        // printf("\n temp %i=(num=%i, suit=%i) \n", i, temp.pile[i].num, temp.pile[i].suit);
+                        continue;
+                    }
+                    temp.pile[i] = deck_dungeon->pile[i-ROOM_SIZE];
+                    // printf("\n temp %i=(num=%i, suit=%i)\n seck %i=(num=%i, suit=%i) \n", i, temp.pile[i].num, temp.pile[i].suit, i-ROOM_SIZE, deck_dungeon->pile[i-ROOM_SIZE].num, deck_dungeon->pile[i-ROOM_SIZE].suit);
+                }
+                for (int i=0; i<MAX_CARDS; i++) {
+                    if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
+                    deck_dungeon->pile[i] = temp.pile[i];
+                }
+                deck_dungeon->size += ROOM_SIZE;
+
+                current_phase = DRAW_PHASE;
+            }
+            break;
+
         case MAIN_PHASE:
             for (int i=0; i<ROOM_SIZE; i++) {
                 if (!dungeon_room[i].card.is_active) {
@@ -234,6 +266,7 @@ void _update_room(float dt) {
                 _update_card_in_room(&dungeon_room[i]);
             }
             break;
+
         case PHASES_NUM:
             break;
     }
