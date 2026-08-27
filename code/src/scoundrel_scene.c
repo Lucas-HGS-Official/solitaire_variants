@@ -68,7 +68,8 @@ static void _fill_room(float dt);
 static void _update_all_cards(float dt);
 static void _update_room(float dt);
 static void _update_card_in_room(Slot *room);
-void _avoid_room(void);
+static void _avoid_room(void);
+static void _update_scoundrel_card(Card *card, float dt);
 
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
@@ -224,7 +225,7 @@ void _update_all_cards(float dt) {
                 put_card_in_slot(&dungeon_room[j], &card_list[i]);
             }
         }
-        update_card(&card_list[i], dt);
+        _update_scoundrel_card(&card_list[i], dt);
     }
 
     return;
@@ -298,4 +299,12 @@ void _avoid_room(void) {
 
     current_phase = DRAW_PHASE;
     is_room_avoidable = false;
+}
+void _update_scoundrel_card(Card *card, float dt) {
+    if (current_phase == MAIN_PHASE) {
+        pickup_card(card);
+    }
+    move_card_to_placement(card, dt);
+
+    return;
 }
