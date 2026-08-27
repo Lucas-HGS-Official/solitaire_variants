@@ -7,10 +7,6 @@
 #include "Sprite.h"
 
 
-void _card_pickup(Card *card);
-void _move_card_to_pile(Card *card, float dt);
-
-
 Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Vector2 card_placement) {
     Card new_card = card_set->cards[(suit+1) * num];
     new_card.placement = card_placement;
@@ -26,8 +22,8 @@ void draw_card(Card *card) {
 }
 void update_card(Card *card, float dt) {
     if (card->is_active) {
-        _card_pickup(card);
-        _move_card_to_pile(card, dt);
+        pickup_card(card);
+        move_card_to_placement(card, dt);
     }
 
     return;
@@ -39,7 +35,7 @@ void destroy_card(Card *card) {
 }
 
 
-void _card_pickup(Card *card) {
+void pickup_card(Card *card) {
     Vector2 mouse_pos = GetMousePosition();
     Vector2 card_pos = { .x=card->spr.dest_rec.x, .y=card->spr.dest_rec.y };
     if (CheckCollisionPointRec(mouse_pos, card->spr.dest_rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
@@ -55,7 +51,7 @@ void _card_pickup(Card *card) {
 
     return;
 }
-void _move_card_to_pile(Card *card, float dt) {
+void move_card_to_placement(Card *card, float dt) {
     if (card->placement.x == 0 && card->placement.y == 0) {
         return;
     }
