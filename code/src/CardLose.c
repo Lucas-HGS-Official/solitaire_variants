@@ -20,14 +20,6 @@ void draw_card(Card *card) {
 
     return;
 }
-void update_card(Card *card, float dt) {
-    if (card->is_active) {
-        pickup_card(card);
-        move_card_to_placement(card, dt);
-    }
-
-    return;
-}
 void destroy_card(Card *card) {
     MemFree(card);
 
