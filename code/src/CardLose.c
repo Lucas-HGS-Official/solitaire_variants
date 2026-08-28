@@ -8,7 +8,7 @@
 
 
 Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Vector2 card_placement) {
-    Card new_card = card_set->cards[(suit+1) * num];
+    Card new_card = card_set->cards[suit*(NUM_CARD_NUM-1) + num];
     new_card.placement = card_placement;
 
     return new_card;
