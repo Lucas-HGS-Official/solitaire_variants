@@ -66,8 +66,6 @@ void update_scene(float dt) {
         if (Vector2Distance(card_pos, card_list[i].placement) <= 1.f && !card_list[i].is_pickup) {
             push_card_to_pile(card_pile, &card_list[i]);
         }
-        // update_card(&card_list[i], dt);
-
         pickup_card(&card_list[i]);
         move_card_to_placement(&card_list[i], dt);
     }
