@@ -88,7 +88,7 @@ void init_scoundrel(CardSet *resources_card_set){
     }
 
     Vector2 weapon_pos = {
-        .x=deck_rect.x+(discard_pile_pos.x-deck_rect.x)/2,
+        .x=deck_rect.x+(deck_rect.width*3)+3,
         .y=deck_rect.y*2,
     };
     weapon_slot = init_slot(weapon_pos, card_set);
@@ -122,7 +122,11 @@ void draw_scoundrel(void) {
         draw_card(&card_list[i]);
     }
 
-    DrawText(TextFormat("LP: %i", life_points), discard_pile->rect.x, discard_pile->rect.y*2+30, 30, WHITE);
+    Vector2 life_pos = {
+        .x=weapon_slot->rect.x + weapon_slot->rect.width + 5,
+        .y=discard_pile->rect.y*2+5,
+    };
+    DrawText(TextFormat("LP: %i", life_points), life_pos.x, life_pos.y, 30, WHITE);
 }
 void destroy_scoundrel(void) {
     _destroy_soundrel_deck(deck_dungeon);
