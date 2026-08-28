@@ -216,13 +216,24 @@ void _update_all_cards(float dt) {
         if (!card_list[i].is_active) {
             continue;
         }
+
         Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
+        bool is_card_in_place = (
+            Vector2Distance(card_pos, card_list[i].placement) < 1.f &&
+            !card_list[i].is_pickup
+        );
+
         for (int j=0; j<ROOM_SIZE; j++) {
-            if (Vector2Distance(card_pos, card_list[i].placement) > 1.f || card_list[i].is_pickup) {
+            if (!is_card_in_place) {
                 continue;
             }
             if (CheckCollisionRecs(card_list[i].spr.dest_rec, dungeon_room[j].rect)) {
                 put_card_in_slot(&dungeon_room[j], &card_list[i]);
+            }
+        }
+        if (is_card_in_place && card_list[i].suit == DIAMONDS_SUIT) {
+            if (CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect)) {
+                put_card_in_slot(weapon_slot, &card_list[i]);
             }
         }
         _update_scoundrel_card(&card_list[i], dt);
@@ -303,6 +314,15 @@ void _avoid_room(void) {
 void _update_scoundrel_card(Card *card, float dt) {
     if (current_phase == MAIN_PHASE) {
         pickup_card(card);
+
+        if (!card->is_pickup && card->suit == DIAMONDS_SUIT) {
+            if (CheckCollisionRecs(card->spr.dest_rec, weapon_slot->rect)) {
+                card->placement = (Vector2) {
+                    .x=weapon_slot->rect.x,
+                    .y=weapon_slot->rect.y,
+                };
+            }
+        }
     }
     move_card_to_placement(card, dt);
 
