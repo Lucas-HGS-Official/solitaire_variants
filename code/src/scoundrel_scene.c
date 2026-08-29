@@ -101,15 +101,15 @@ void init_scoundrel(CardSet *resources_card_set){
 }
 void update_scoundrel(float dt) {
     _update_room(dt);
-    // if (IsKeyPressed(KEY_N)) {
-    //     for (int i=0; i<MAX_CARDS; i++) {
-    //         if (card_list[i].is_active) {
-    //             continue;
-    //         }
-    //         card_list[i] = instance_card(card_set, DIAMONDS_SUIT, KING_NUM, GetMousePosition());
-    //         break;
-    //     }
-    // }
+    if (IsKeyPressed(KEY_N)) {
+        for (int i=0; i<MAX_CARDS; i++) {
+            if (card_list[i].is_active) {
+                continue;
+            }
+            card_list[i] = instance_card(card_set, DIAMONDS_SUIT, KING_NUM, GetMousePosition());
+            break;
+        }
+    }
     _update_all_cards(dt);
 
     return;
@@ -245,9 +245,20 @@ void _update_all_cards(float dt) {
             }
         }
         if (is_card_in_place && card_list[i].suit == DIAMONDS_SUIT) {
-            if (weapon_slot->card.is_active) {
-                continue;
-            }else if (CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect)) {
+            if (CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect)) {
+                if (weapon_slot->card.is_active) {
+                    for (int j=0; j<MAX_CARDS; j++) {
+                        if (card_list[j].is_active) {
+                            continue;
+                        }
+                        card_list[j] = take_card_from_slot(weapon_slot);
+                        card_list[j].placement = (Vector2) {
+                            .x=discard_pile->rect.x, .y=discard_pile->rect.y
+                        };
+                        card_list[j].spr.dest_rec.y -= card_list[j].spr.dest_rec.height;
+                        break;
+                    }
+                }
                 put_card_in_slot(weapon_slot, &card_list[i]);
             }
         }
@@ -331,9 +342,10 @@ void _update_scoundrel_card(Card *card, float dt) {
         pickup_card(card);
 
         if (!card->is_pickup && card->suit == DIAMONDS_SUIT) {
-            if (weapon_slot->card.is_active) {
-                // Do nothing
-            } else if (CheckCollisionRecs(card->spr.dest_rec, weapon_slot->rect)) {
+            // if (weapon_slot->card.is_active) {
+            //     // Do nothing
+            // } else
+            if (CheckCollisionRecs(card->spr.dest_rec, weapon_slot->rect)) {
                 card->placement = (Vector2) {
                     .x=weapon_slot->rect.x,
                     .y=weapon_slot->rect.y,
