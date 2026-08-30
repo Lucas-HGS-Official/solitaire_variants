@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "CardSet.h"
-#include "CardLose.h"
+#include "LooseCard.h"
 
 
 Pile *init_pile(Vector2 pile_pos, CardSet *card_set) {

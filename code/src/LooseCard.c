@@ -1,4 +1,4 @@
-#include "CardLose.h"
+#include "LooseCard.h"
 
 #include <raylib.h>
 #include <stdbool.h>

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "CardSet.h"
-#include "CardLose.h"
+#include "LooseCard.h"
 #include "Deck.h"
 #include "Pile.h"
 
