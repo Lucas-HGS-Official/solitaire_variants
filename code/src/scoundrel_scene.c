@@ -253,13 +253,14 @@ void _update_all_cards(float dt) {
             }
         }
 
+        bool is_in_weapon = CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect);
+        bool is_loose = !card_list[i].is_pickup;
+        bool is_discarted = Vector2Equals(card_list[i].placement, discard_pile_placement);
+
         bool is_monster_type = (bool) (
             card_list[i].suit == (CARD_SUIT) MONSTER_CLUB_TYPE ||
             card_list[i].suit == (CARD_SUIT) MONSTER_SPADE_TYPE
         );
-        bool is_in_weapon = CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect);
-        bool is_loose = !card_list[i].is_pickup;
-        bool is_discarted = Vector2Equals(card_list[i].placement, discard_pile_placement);
         bool is_taking_damage = is_monster_type && is_in_weapon && is_loose && !is_discarted;
         if (is_taking_damage) {
             if (!weapon_slot->card.is_active) {
@@ -268,6 +269,17 @@ void _update_all_cards(float dt) {
                 } else {
                     life_points -= card_list[i].num + CARD_VALUE_MODIFIER;
                 }
+            }
+            card_list[i].placement = discard_pile_placement;
+        }
+
+        bool is_potion_type = card_list[i].suit == (CARD_SUIT) HEALTH_POTION_TYPE;
+        bool is_healing_damage = is_potion_type && is_in_weapon && is_loose && !is_discarted;
+        if (is_healing_damage) {
+            if (card_list[i].num == ACE_NUM) {
+                life_points += card_list[i].num + ACE_CARD_VALUE_MODIFIER;
+            } else {
+                life_points += card_list[i].num + CARD_VALUE_MODIFIER;
             }
             card_list[i].placement = discard_pile_placement;
         }
