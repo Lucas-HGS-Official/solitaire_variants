@@ -263,6 +263,7 @@ void _update_all_cards(float dt) {
                     }
                 }
                 put_card_in_slot(weapon_slot, &card_list[i]);
+                current_phase = DRAW_PHASE;
             }
         }
         if (CheckCollisionRecs(card_list[i].spr.dest_rec, discard_pile->rect)) {
