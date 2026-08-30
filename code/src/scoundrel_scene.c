@@ -244,7 +244,7 @@ void _update_all_cards(float dt) {
                 put_card_in_slot(&dungeon_room[j], &card_list[i]);
             }
         }
-        if (is_card_in_place && card_list[i].suit == DIAMONDS_SUIT) {
+        if (is_card_in_place && card_list[i].suit == (CARD_SUIT) WEAPON_TYPE) {
             if (CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect)) {
                 if (weapon_slot->card.is_active) {
                     for (int j=0; j<MAX_CARDS; j++) {
@@ -341,10 +341,7 @@ void _update_scoundrel_card(Card *card, float dt) {
     if (current_phase == MAIN_PHASE) {
         pickup_card(card);
 
-        if (!card->is_pickup && card->suit == DIAMONDS_SUIT) {
-            // if (weapon_slot->card.is_active) {
-            //     // Do nothing
-            // } else
+        if (!card->is_pickup && card->suit == (CARD_SUIT) WEAPON_TYPE) {
             if (CheckCollisionRecs(card->spr.dest_rec, weapon_slot->rect)) {
                 card->placement = (Vector2) {
                     .x=weapon_slot->rect.x,
