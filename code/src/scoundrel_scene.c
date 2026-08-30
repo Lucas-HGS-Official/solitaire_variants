@@ -25,28 +25,13 @@ typedef enum SCOUNDREL_CARD_TYPE {
     MONSTER_SPADE_TYPE = SPADES_SUIT,
 } SCOUNDREL_CARD_TYPE;
 
-// typedef enum SCOUNDREL_CARD_VALUE {
-//     TWO_VALUE = 2,
-//     THREE_VALUE,
-//     FOUR_VALUE,
-//     FIVE_VALUE,
-//     SIX_VALUE,
-//     SEVEN_VALUE,
-//     EIGHT_VALUE,
-//     NINE_VALUE,
-//     TEN_VALUE,
-//     JACK_VALUE,
-//     QUEEN_VALUE,
-//     KING_VALUE,
-//     ACE_VALUE,
-// } SCOUNDREL_CARD_VALUE;
-
 
 #define ROOM_SIZE 4
 #define NEW_CARD_TIME .5f
 #define MAX_LIFE 20
 #define ACE_CARD_VALUE_MODIFIER 14
 #define CARD_VALUE_MODIFIER 1
+
 
 static Card card_list[MAX_CARDS] = {0};
 static CardSet *card_set = NULL;
