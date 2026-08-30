@@ -215,10 +215,14 @@ void _fill_room(float dt) {
     }
     if (empty_rooms == 0) {
         is_room_to_be_filled = false;
-        if (is_room_avoidable) {
+    }
+    if (!is_room_to_be_filled) {
+        if (is_room_avoidable && empty_rooms == 0) {
             current_phase = KEEP_PHASE;
+            is_room_avoidable = false;
         } else {
             current_phase = MAIN_PHASE;
+            is_room_avoidable = true;
         }
     }
 
@@ -235,7 +239,6 @@ void _update_all_cards(float dt) {
             Vector2Distance(card_pos, card_list[i].placement) < 1.f &&
             !card_list[i].is_pickup
         );
-
         for (int j=0; j<ROOM_SIZE; j++) {
             if (!is_card_in_place) {
                 continue;
@@ -260,6 +263,12 @@ void _update_all_cards(float dt) {
                     }
                 }
                 put_card_in_slot(weapon_slot, &card_list[i]);
+            }
+        }
+        if (CheckCollisionRecs(card_list[i].spr.dest_rec, discard_pile->rect)) {
+            if (is_card_in_place) {
+                push_card_to_pile(discard_pile, &card_list[i]);
+                current_phase = DRAW_PHASE;
             }
         }
         _update_scoundrel_card(&card_list[i], dt);
@@ -289,7 +298,6 @@ void _update_room(float dt) {
                 }
                 _update_card_in_room(&dungeon_room[i]);
             }
-            is_room_avoidable = true;
             break;
 
         case PHASES_NUM:
