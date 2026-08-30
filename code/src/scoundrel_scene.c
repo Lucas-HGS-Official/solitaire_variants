@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #include "CardSet.h"
-#include "CardLose.h"
+#include "LooseCard.h"
 #include "Pile.h"
 
 
@@ -25,27 +25,28 @@ typedef enum SCOUNDREL_CARD_TYPE {
     MONSTER_SPADE_TYPE = SPADES_SUIT,
 } SCOUNDREL_CARD_TYPE;
 
-typedef enum SCOUNDREL_CARD_VALUE {
-    TWO_VALUE = 2,
-    THREE_VALUE,
-    FOUR_VALUE,
-    FIVE_VALUE,
-    SIX_VALUE,
-    SEVEN_VALUE,
-    EIGHT_VALUE,
-    NINE_VALUE,
-    TEN_VALUE,
-    JACK_VALUE,
-    QUEEN_VALUE,
-    KING_VALUE,
-    ACE_VALUE,
-} SCOUNDREL_CARD_VALUE;
+// typedef enum SCOUNDREL_CARD_VALUE {
+//     TWO_VALUE = 2,
+//     THREE_VALUE,
+//     FOUR_VALUE,
+//     FIVE_VALUE,
+//     SIX_VALUE,
+//     SEVEN_VALUE,
+//     EIGHT_VALUE,
+//     NINE_VALUE,
+//     TEN_VALUE,
+//     JACK_VALUE,
+//     QUEEN_VALUE,
+//     KING_VALUE,
+//     ACE_VALUE,
+// } SCOUNDREL_CARD_VALUE;
 
 
 #define ROOM_SIZE 4
 #define NEW_CARD_TIME .5f
 #define MAX_LIFE 20
-
+#define ACE_CARD_VALUE_MODIFIER 14
+#define CARD_VALUE_MODIFIER 1
 
 static Card card_list[MAX_CARDS] = {0};
 static CardSet *card_set = NULL;
@@ -233,7 +234,9 @@ void _update_all_cards(float dt) {
         if (!card_list[i].is_active) {
             continue;
         }
-
+        Vector2 discard_pile_placement = (Vector2) {
+            .x=discard_pile->rect.x, .y=discard_pile->rect.y
+        };
         Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
         bool is_card_in_place = (
             Vector2Distance(card_pos, card_list[i].placement) < 1.f &&
@@ -255,9 +258,7 @@ void _update_all_cards(float dt) {
                             continue;
                         }
                         card_list[j] = take_card_from_slot(weapon_slot);
-                        card_list[j].placement = (Vector2) {
-                            .x=discard_pile->rect.x, .y=discard_pile->rect.y
-                        };
+                        card_list[j].placement = discard_pile_placement;
                         card_list[j].spr.dest_rec.y -= card_list[j].spr.dest_rec.height;
                         break;
                     }
@@ -266,7 +267,27 @@ void _update_all_cards(float dt) {
                 current_phase = DRAW_PHASE;
             }
         }
-        if (CheckCollisionRecs(card_list[i].spr.dest_rec, discard_pile->rect)) {
+
+        bool is_monster_type = (bool) (
+            card_list[i].suit == (CARD_SUIT) MONSTER_CLUB_TYPE ||
+            card_list[i].suit == (CARD_SUIT) MONSTER_SPADE_TYPE
+        );
+        bool is_in_weapon = CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect);
+        bool is_loose = !card_list[i].is_pickup;
+        bool is_discarted = Vector2Equals(card_list[i].placement, discard_pile_placement);
+        bool is_taking_damage = is_monster_type && is_in_weapon && is_loose && !is_discarted;
+        if (is_taking_damage) {
+            if (!weapon_slot->card.is_active) {
+                if (card_list[i].num == ACE_NUM) {
+                    life_points -= card_list[i].num + ACE_CARD_VALUE_MODIFIER;
+                } else {
+                    life_points -= card_list[i].num + CARD_VALUE_MODIFIER;
+                }
+            }
+            card_list[i].placement = discard_pile_placement;
+        }
+
+        if (is_discarted) {
             if (is_card_in_place) {
                 push_card_to_pile(discard_pile, &card_list[i]);
                 current_phase = DRAW_PHASE;
