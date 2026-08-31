@@ -35,6 +35,7 @@ void draw_pile(Pile *pile) {
     DrawRectangleLinesEx(pile_bg, 5.f, DARKBLUE);
 
     if (pile->size) {
+        // if the pile is face up or face down, the drawn card maybe diferent
         draw_card(&pile->top);
     }
 
@@ -50,15 +51,17 @@ void push_card_to_pile(Pile *pile, Card *card) {
         return;
     }
     for (int i=0; i<MAX_CARDS; i++) {
+        // looking for an empty space in the pile
         if (!pile->pile[i].is_active) {
             card->spr.dest_rec = pile->rect;
             pile->pile[i] = *card;
             pile->top = *card;
+
             if (!pile->is_faceup) {
+                // changes the top card to the card back
                 change_card_face(&pile->top, SPECIALS_NUM, DIAMONDS_SUIT);
             }
-            pile->top.spr.dest_rec.x = pile->rect.x;
-            pile->top.spr.dest_rec.y = pile->rect.y;
+
             pile->size++;
 
             card->is_active = false;
@@ -93,6 +96,7 @@ Card pop_card_from_pile(Pile *pile) {
     return card_from_pile;
 }
 void shuffle_pile(Pile *pile) {
+    // Fisher-Yates shuffle algorithm
     if (pile->size > 1) {
         for (int i=0; i < pile->size-1; i++) {
             int j = GetRandomValue(0, i);

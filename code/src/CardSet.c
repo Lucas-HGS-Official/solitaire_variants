@@ -7,6 +7,7 @@
 
 CardSet *init_cardset(void) {
     Card card_template = {0};
+    // Loading the card texture and initializing all the things raylib need to draw it
     init_sprite(&card_template.spr, "resources/cardsLarge_tilemap_packed.png");
     card_template.num = ACE_NUM;
     card_template.suit = CLUBS_SUIT;
@@ -15,9 +16,11 @@ CardSet *init_cardset(void) {
     card_template.is_pickup = false;
     card_template.is_active = true;
 
+    // Separates and determines the size of a single card from the texture
     card_template.spr.src_rec.width /= NUM_CARD_NUM;
     card_template.spr.src_rec.height /= NUM_SUIT;
 
+    // Determines the size each card will be on screen
     card_template.spr.dest_rec.width /= NUM_CARD_NUM;
     card_template.spr.dest_rec.height /= NUM_SUIT;
 
@@ -25,6 +28,7 @@ CardSet *init_cardset(void) {
 
     CardSet *new_set = MemAlloc(sizeof(CardSet));
 
+    // Filling in all 52 standard cards
     CARD_SUIT suit = HEARTS_SUIT;
     CARD_NUM num = ACE_NUM;
     for (int i=0; i<DECK_SIZE; i++) {
@@ -64,6 +68,8 @@ void update_cardset(CardSet *card_set) {
 void change_card_face(Card *card, CARD_NUM new_card_num, CARD_SUIT new_card_suit) {
     card->num = new_card_num;
     card->suit = new_card_suit;
+
+    // Finds the correct source rectangle for the face for the card
     card->spr.src_rec.x = card->spr.src_rec.width * card->num;
     card->spr.src_rec.y = card->spr.src_rec.height * card->suit;
 

@@ -35,6 +35,7 @@ typedef enum CARD_NUM {
     QUEEN_NUM,
     KING_NUM,
 
+    // SPECIALS_NUM are the non-standard faces from the texture, such as jokers, blanks and backs
     SPECIALS_NUM,
 
     NUM_CARD_NUM,
@@ -43,14 +44,19 @@ typedef enum CARD_NUM {
 
 typedef struct Card {
     Sprite spr;
+
     CARD_NUM num;
     CARD_SUIT suit;
-    Vector2 mouse_xydelta;
-    Vector2 placement;
+
+    Vector2 mouse_xydelta; // to hold the position of mouse relative to the card while the card is picked up
+    Vector2 placement; // position where the card returns when not picked up
+
+    // for card movement
     Vector2 direction;
     float speed;
-    bool is_pickup;
-    bool is_active;
+
+    bool is_pickup; // determines if the card is currently held by the player
+    bool is_active; // determines when the card being used
 } Card;
 
 typedef struct CardSet {

@@ -8,6 +8,7 @@
 #include "CardSet.h"
 
 
+// piles hold any number of cards
 typedef struct Pile {
     Card pile[MAX_CARDS];
     Card top;
@@ -17,6 +18,7 @@ typedef struct Pile {
     bool is_faceup;
 } Pile;
 
+// slots hold 1 card
 typedef struct Slot {
     Card card;
     Card card_back;

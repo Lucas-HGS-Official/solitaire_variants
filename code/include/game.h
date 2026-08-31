@@ -4,6 +4,7 @@
 #include <raymath.h>
 
 
+// Defining scenes for each solitaire variant game for the player to chose
 typedef enum SCENE_STATE {
     TEST_SCENE,
     SCOUNDREL_SCENE,

@@ -14,17 +14,22 @@ static SCENE_STATE current_scene = 0;
 static CardSet *card_set = NULL;
 
 
-void _update_game(float dt);
-void _draw_game(void);
+static void _update_game(float dt);
+static void _draw_game(void);
 
 
 void game_init(void) {
+    // Initializing Raylib and the window and it's functions
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_NAME);
     InitAudioDevice();
     SetTargetFPS(60);
-    current_scene = SCOUNDREL_SCENE;
+
+    // Initializing a CardSet struct with all possible cards
     card_set = init_cardset();
 
+    // TODO: move this to loop
+    // TODO: create initial menu scene where other scenes can be selected
+    current_scene = SCOUNDREL_SCENE;
     switch (current_scene) {
         case TEST_SCENE:
             init_scene(card_set);
@@ -39,6 +44,7 @@ void game_init(void) {
     return;
 }
 
+// Main game loop
 void game_loop(void) {
     while (!WindowShouldClose()) {
         _update_game(GetFrameTime());
@@ -49,6 +55,7 @@ void game_loop(void) {
 }
 
 void game_close(void) {
+    // Releases the memory that the opened scene reserved
     switch (current_scene) {
         case TEST_SCENE:
             destroy_scene();
@@ -69,6 +76,7 @@ void game_close(void) {
 
 
 void _update_game(float dt) {
+    // Calls the update function for the currently opened scene before drawing
     switch (current_scene) {
         case TEST_SCENE:
             update_scene(dt);
@@ -83,7 +91,10 @@ void _update_game(float dt) {
     return;
 }
 void _draw_game(void) {
+    // Using the BeginDrawing and EndDrawing function from Raylib
     BeginDrawing();
+
+    // Calls the draw function for the currently opened scene
     switch (current_scene) {
         case TEST_SCENE:
             draw_scene();
@@ -96,5 +107,6 @@ void _draw_game(void) {
     }
 
     EndDrawing();
+
     return;
 }
