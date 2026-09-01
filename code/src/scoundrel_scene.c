@@ -283,6 +283,7 @@ void _update_all_cards(float dt) {
             } else {
                 life_points += card_list[i].num + CARD_VALUE_MODIFIER;
             }
+            life_points = (int)Clamp((float)life_points, 0, MAX_LIFE);
             card_list[i].placement = discard_pile_placement;
         }
 
