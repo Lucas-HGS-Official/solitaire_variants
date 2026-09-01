@@ -8,6 +8,7 @@
 #include "LooseCard.h"
 #include "Deck.h"
 #include "Pile.h"
+#include "Slot.h"
 
 
 Card card_list[MAX_CARDS] = {0};

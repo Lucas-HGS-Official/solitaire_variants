@@ -8,6 +8,7 @@
 #include "CardSet.h"
 #include "LooseCard.h"
 #include "Pile.h"
+#include "Slot.h"
 
 
 typedef enum PHASE_STATE {
