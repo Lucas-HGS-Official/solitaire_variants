@@ -264,13 +264,14 @@ void _update_all_cards(float dt) {
         );
         bool is_taking_damage = is_monster_type && is_in_weapon && is_loose && !is_discarted;
         if (is_taking_damage) {
-            if (!weapon_slot->card.is_active) {
-                if (card_list[i].num == ACE_NUM) {
-                    life_points -= card_list[i].num + ACE_CARD_VALUE_MODIFIER;
-                } else {
-                    life_points -= card_list[i].num + CARD_VALUE_MODIFIER;
-                }
+            int monster_power = card_list[i].num + CARD_VALUE_MODIFIER;
+            if (card_list[i].num == ACE_NUM) {
+                monster_power = ACE_CARD_VALUE_MODIFIER;
             }
+            int weapon_power = weapon_slot->card.is_active ? weapon_slot->card.num + CARD_VALUE_MODIFIER : 0;
+
+            int damage_to_take = monster_power - weapon_power;
+            life_points -= damage_to_take > 0 ? damage_to_take : 0;
             card_list[i].placement = discard_pile_placement;
         }
 
