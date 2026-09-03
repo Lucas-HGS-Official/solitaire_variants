@@ -5,19 +5,6 @@
       "-c",
       "-Icode/include",
       "-o",
-      "code/obj/CardLose.o",
-      "code/src/CardLose.c"
-    ],
-    "directory": "/home/lhgs/dev/C/solitaire_variants",
-    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/CardLose.c",
-    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/CardLose.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang",
-      "-c",
-      "-Icode/include",
-      "-o",
       "code/obj/CardSet.o",
       "code/src/CardSet.c"
     ],
@@ -50,6 +37,19 @@
     "directory": "/home/lhgs/dev/C/solitaire_variants",
     "file": "/home/lhgs/dev/C/solitaire_variants/code/src/game.c",
     "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/game.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/LooseCard.o",
+      "code/src/LooseCard.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/LooseCard.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/LooseCard.o"
   },
   {
     "arguments": [
@@ -102,6 +102,19 @@
     "directory": "/home/lhgs/dev/C/solitaire_variants",
     "file": "/home/lhgs/dev/C/solitaire_variants/code/src/scoundrel_scene.c",
     "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/scoundrel_scene.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-c",
+      "-Icode/include",
+      "-o",
+      "code/obj/Slot.o",
+      "code/src/Slot.c"
+    ],
+    "directory": "/home/lhgs/dev/C/solitaire_variants",
+    "file": "/home/lhgs/dev/C/solitaire_variants/code/src/Slot.c",
+    "output": "/home/lhgs/dev/C/solitaire_variants/code/obj/Slot.o"
   },
   {
     "arguments": [
