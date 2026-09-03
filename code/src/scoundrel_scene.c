@@ -56,7 +56,7 @@ static void _update_all_cards(float dt);
 static void _update_room(float dt);
 static void _update_card_in_room(Slot *room);
 static void _avoid_room(void);
-static void _update_scoundrel_card(Card *card, float dt);
+static void _update_scoundrel_loose_card(Card *card, float dt);
 
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
@@ -220,14 +220,24 @@ void _update_all_cards(float dt) {
         if (!card_list[i].is_active) {
             continue;
         }
+
+        _update_scoundrel_loose_card(&card_list[i], dt);
+
         Vector2 discard_pile_placement = (Vector2) {
             .x=discard_pile->rect.x, .y=discard_pile->rect.y
         };
         Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
+
+        bool is_in_weapon = CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect);
+        bool is_loose = !card_list[i].is_pickup;
+        bool is_discarted = Vector2Equals(card_list[i].placement, discard_pile_placement);
+
         bool is_card_in_place = (
             Vector2Distance(card_pos, card_list[i].placement) < 1.f &&
             !card_list[i].is_pickup
         );
+        bool is_just_released = IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
+
         for (int j=0; j<ROOM_SIZE; j++) {
             if (!is_card_in_place) {
                 continue;
@@ -236,34 +246,31 @@ void _update_all_cards(float dt) {
                 put_card_in_slot(&dungeon_room[j], &card_list[i]);
             }
         }
-        if (is_card_in_place && card_list[i].suit == (CARD_SUIT) WEAPON_TYPE) {
-            if (CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect)) {
-                if (weapon_slot->card.is_active) {
-                    for (int j=0; j<MAX_CARDS; j++) {
-                        if (card_list[j].is_active) {
-                            continue;
-                        }
-                        card_list[j] = take_card_from_slot(weapon_slot);
-                        card_list[j].placement = discard_pile_placement;
-                        card_list[j].spr.dest_rec.y -= card_list[j].spr.dest_rec.height;
-                        break;
-                    }
-                }
-                put_card_in_slot(weapon_slot, &card_list[i]);
-                current_phase = DRAW_PHASE;
-            }
-        }
 
-        bool is_in_weapon = CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect);
-        bool is_loose = !card_list[i].is_pickup;
-        bool is_discarted = Vector2Equals(card_list[i].placement, discard_pile_placement);
+        bool is_weapon_type = card_list[i].suit == (CARD_SUIT) WEAPON_TYPE;
+        if (is_in_weapon && is_weapon_type && is_just_released) {
+            if (weapon_slot->card.is_active) {
+                for (int j=0; j<MAX_CARDS; j++) {
+                    if (card_list[j].is_active) {
+                        continue;
+                    }
+                    card_list[j] = take_card_from_slot(weapon_slot);
+                    card_list[j].placement = discard_pile_placement;
+                    card_list[j].spr.dest_rec.y -= card_list[j].spr.dest_rec.height;
+                    break;
+                }
+            }
+            put_card_in_slot(weapon_slot, &card_list[i]);
+            current_phase = DRAW_PHASE;
+        }
 
         bool is_monster_type = (bool) (
             card_list[i].suit == (CARD_SUIT) MONSTER_CLUB_TYPE ||
             card_list[i].suit == (CARD_SUIT) MONSTER_SPADE_TYPE
         );
         bool is_taking_damage = is_monster_type && is_in_weapon && is_loose && !is_discarted;
-        if (is_taking_damage) {
+
+        if (is_taking_damage && is_just_released) {
             int monster_power = card_list[i].num + CARD_VALUE_MODIFIER;
             if (card_list[i].num == ACE_NUM) {
                 monster_power = ACE_CARD_VALUE_MODIFIER;
@@ -277,7 +284,8 @@ void _update_all_cards(float dt) {
 
         bool is_potion_type = card_list[i].suit == (CARD_SUIT) HEALTH_POTION_TYPE;
         bool is_healing_damage = is_potion_type && is_in_weapon && is_loose && !is_discarted;
-        if (is_healing_damage) {
+
+        if (is_healing_damage && is_just_released) {
             if (card_list[i].num == ACE_NUM) {
                 life_points += card_list[i].num + ACE_CARD_VALUE_MODIFIER;
             } else {
@@ -293,7 +301,6 @@ void _update_all_cards(float dt) {
                 current_phase = DRAW_PHASE;
             }
         }
-        _update_scoundrel_card(&card_list[i], dt);
     }
 
     return;
@@ -367,18 +374,9 @@ void _avoid_room(void) {
     current_phase = DRAW_PHASE;
     is_room_avoidable = false;
 }
-void _update_scoundrel_card(Card *card, float dt) {
+void _update_scoundrel_loose_card(Card *card, float dt) {
     if (current_phase == MAIN_PHASE) {
-        pickup_card(card);
-
-        if (!card->is_pickup && card->suit == (CARD_SUIT) WEAPON_TYPE) {
-            if (CheckCollisionRecs(card->spr.dest_rec, weapon_slot->rect)) {
-                card->placement = (Vector2) {
-                    .x=weapon_slot->rect.x,
-                    .y=weapon_slot->rect.y,
-                };
-            }
-        }
+        pickedup_card(card);
     }
     move_card_to_placement(card, dt);
 
