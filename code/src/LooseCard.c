@@ -27,7 +27,7 @@ void destroy_card(Card *card) {
 }
 
 
-void pickup_card(Card *card) {
+void pickedup_card(Card *card) {
     Vector2 mouse_pos = GetMousePosition();
     Vector2 card_pos = { .x=card->spr.dest_rec.x, .y=card->spr.dest_rec.y };
 

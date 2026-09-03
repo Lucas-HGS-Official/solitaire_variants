@@ -13,5 +13,5 @@ Card instance_card(CardSet *card_set, CARD_SUIT suit, CARD_NUM num, Vector2 card
 void draw_card(Card *card);
 void destroy_card(Card *card);
 
-void pickup_card(Card *card);
+void pickedup_card(Card *card);
 void move_card_to_placement(Card *card, float dt);
