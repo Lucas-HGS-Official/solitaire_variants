@@ -57,6 +57,10 @@ static void _update_room(float dt);
 static void _update_card_in_room(Slot *room);
 static void _avoid_room(void);
 static void _update_scoundrel_loose_card(Card *card, float dt);
+static void _add_weapon_to_slot(Card *card);
+static void _take_damage(Card *card);
+static void _heal_damage(Card *card);
+
 
 void init_scoundrel(CardSet *resources_card_set){
     card_set = resources_card_set;
@@ -249,19 +253,7 @@ void _update_all_cards(float dt) {
 
         bool is_weapon_type = card_list[i].suit == (CARD_SUIT) WEAPON_TYPE;
         if (is_in_weapon && is_weapon_type && is_just_released) {
-            if (weapon_slot->card.is_active) {
-                for (int j=0; j<MAX_CARDS; j++) {
-                    if (card_list[j].is_active) {
-                        continue;
-                    }
-                    card_list[j] = take_card_from_slot(weapon_slot);
-                    card_list[j].placement = discard_pile_placement;
-                    card_list[j].spr.dest_rec.y -= card_list[j].spr.dest_rec.height;
-                    break;
-                }
-            }
-            put_card_in_slot(weapon_slot, &card_list[i]);
-            current_phase = DRAW_PHASE;
+            _add_weapon_to_slot(&card_list[i]);
         }
 
         bool is_monster_type = (bool) (
@@ -271,28 +263,14 @@ void _update_all_cards(float dt) {
         bool is_taking_damage = is_monster_type && is_in_weapon && is_loose && !is_discarted;
 
         if (is_taking_damage && is_just_released) {
-            int monster_power = card_list[i].num + CARD_VALUE_MODIFIER;
-            if (card_list[i].num == ACE_NUM) {
-                monster_power = ACE_CARD_VALUE_MODIFIER;
-            }
-            int weapon_power = weapon_slot->card.is_active ? weapon_slot->card.num + CARD_VALUE_MODIFIER : 0;
-
-            int damage_to_take = monster_power - weapon_power;
-            life_points -= damage_to_take > 0 ? damage_to_take : 0;
-            card_list[i].placement = discard_pile_placement;
+            _take_damage(&card_list[i]);
         }
 
         bool is_potion_type = card_list[i].suit == (CARD_SUIT) HEALTH_POTION_TYPE;
         bool is_healing_damage = is_potion_type && is_in_weapon && is_loose && !is_discarted;
 
         if (is_healing_damage && is_just_released) {
-            if (card_list[i].num == ACE_NUM) {
-                life_points += card_list[i].num + ACE_CARD_VALUE_MODIFIER;
-            } else {
-                life_points += card_list[i].num + CARD_VALUE_MODIFIER;
-            }
-            life_points = (int)Clamp((float)life_points, 0, MAX_LIFE);
-            card_list[i].placement = discard_pile_placement;
+            _heal_damage(&card_list[i]);
         }
 
         if (is_discarted) {
@@ -379,6 +357,58 @@ void _update_scoundrel_loose_card(Card *card, float dt) {
         pickedup_card(card);
     }
     move_card_to_placement(card, dt);
+
+    return;
+}
+void _add_weapon_to_slot(Card *card) {
+    if (weapon_slot->card.is_active) {
+        for (int j=0; j<MAX_CARDS; j++) {
+            if (card_list[j].is_active) {
+                continue;
+            }
+            Vector2 discard_pile_placement = (Vector2) {
+                .x=discard_pile->rect.x, .y=discard_pile->rect.y
+            };
+            card_list[j] = take_card_from_slot(weapon_slot);
+            card_list[j].placement = discard_pile_placement;
+            card_list[j].spr.dest_rec.y -= card_list[j].spr.dest_rec.height;
+            break;
+        }
+    }
+    put_card_in_slot(weapon_slot, card);
+    current_phase = DRAW_PHASE;
+
+    return;
+}
+void _take_damage(Card *card) {
+    Vector2 discard_pile_placement = (Vector2) {
+        .x=discard_pile->rect.x, .y=discard_pile->rect.y
+    };
+    int monster_power = card->num + CARD_VALUE_MODIFIER;
+    if (card->num == ACE_NUM) {
+        monster_power = ACE_CARD_VALUE_MODIFIER;
+    }
+    int weapon_power = weapon_slot->card.is_active ?
+        weapon_slot->card.num + CARD_VALUE_MODIFIER
+        : 0;
+
+    int damage_to_take = monster_power - weapon_power;
+    life_points -= damage_to_take > 0 ? damage_to_take : 0;
+    card->placement = discard_pile_placement;
+
+    return;
+}
+void _heal_damage(Card *card) {
+    Vector2 discard_pile_placement = (Vector2) {
+        .x=discard_pile->rect.x, .y=discard_pile->rect.y
+    };
+    if (card->num == ACE_NUM) {
+        life_points += card->num + ACE_CARD_VALUE_MODIFIER;
+    } else {
+        life_points += card->num + CARD_VALUE_MODIFIER;
+    }
+    life_points = (int)Clamp((float)life_points, 0, MAX_LIFE);
+    card->placement = discard_pile_placement;
 
     return;
 }
