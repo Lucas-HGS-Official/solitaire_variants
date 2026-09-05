@@ -40,6 +40,7 @@ static Pile *discard_pile = NULL;
 static Pile *deck_dungeon = NULL;
 static Slot dungeon_room[ROOM_SIZE] = {0};
 static Slot *weapon_slot = NULL;
+static Pile *weapon_slayed_pile = NULL;
 static float new_card_timer = NEW_CARD_TIME;
 static bool is_room_to_be_filled = false;
 static Vector2 empty_room_slots[ROOM_SIZE] = {0};
@@ -83,6 +84,10 @@ void init_scoundrel(CardSet *resources_card_set){
         .y=deck_rect.y*2,
     };
     weapon_slot = init_slot(weapon_pos, card_set);
+    // weapon_pos.y += weapon_slot->rect.height/2;
+    weapon_pos.x -= weapon_slot->rect.width;
+    weapon_slayed_pile = init_pile(weapon_pos, card_set);
+
     life_points = MAX_LIFE;
 
     is_room_avoidable = true;
@@ -118,6 +123,8 @@ void draw_scoundrel(void) {
 
     draw_slot(weapon_slot);
 
+    draw_pile(weapon_slayed_pile);
+
     for (int i=0; i<MAX_CARDS; i++) {
         draw_card(&card_list[i]);
     }
@@ -130,6 +137,7 @@ void draw_scoundrel(void) {
 }
 void destroy_scoundrel(void) {
     _destroy_soundrel_deck(deck_dungeon);
+    destroy_pile(weapon_slayed_pile);
     destroy_pile(discard_pile);
     destroy_slot(weapon_slot);
 
@@ -230,11 +238,15 @@ void _update_all_cards(float dt) {
         Vector2 discard_pile_placement = (Vector2) {
             .x=discard_pile->rect.x, .y=discard_pile->rect.y
         };
+        Vector2 slayed_pile_placement = (Vector2) {
+            .x=weapon_slayed_pile->rect.x, .y=weapon_slayed_pile->rect.y,
+        };
         Vector2 card_pos = { card_list[i].spr.dest_rec.x, card_list[i].spr.dest_rec.y };
 
         bool is_in_weapon = CheckCollisionRecs(card_list[i].spr.dest_rec, weapon_slot->rect);
         bool is_loose = !card_list[i].is_pickup;
         bool is_discarted = Vector2Equals(card_list[i].placement, discard_pile_placement);
+        bool is_slayed = Vector2Equals(card_list[i].placement, slayed_pile_placement);
 
         bool is_card_in_place = (
             Vector2Distance(card_pos, card_list[i].placement) < 1.f &&
@@ -273,11 +285,14 @@ void _update_all_cards(float dt) {
             _heal_damage(&card_list[i]);
         }
 
-        if (is_discarted) {
-            if (is_card_in_place) {
-                push_card_to_pile(discard_pile, &card_list[i]);
-                current_phase = DRAW_PHASE;
-            }
+        if (is_slayed && is_card_in_place) {
+            push_card_to_pile(weapon_slayed_pile, &card_list[i]);
+            current_phase = DRAW_PHASE;
+        }
+
+        if (is_discarted && is_card_in_place) {
+            push_card_to_pile(discard_pile, &card_list[i]);
+            current_phase = DRAW_PHASE;
         }
     }
 
@@ -384,17 +399,25 @@ void _take_damage(Card *card) {
     Vector2 discard_pile_placement = (Vector2) {
         .x=discard_pile->rect.x, .y=discard_pile->rect.y
     };
+    card->placement = discard_pile_placement;
+
     int monster_power = card->num + CARD_VALUE_MODIFIER;
     if (card->num == ACE_NUM) {
         monster_power = ACE_CARD_VALUE_MODIFIER;
     }
-    int weapon_power = weapon_slot->card.is_active ?
-        weapon_slot->card.num + CARD_VALUE_MODIFIER
-        : 0;
+
+    int weapon_power = 0;
+    if (weapon_slot->card.is_active) {
+        weapon_power = weapon_slot->card.num + CARD_VALUE_MODIFIER;
+
+        Vector2 slayed_pile_placement = (Vector2) {
+            .x=weapon_slayed_pile->rect.x, .y=weapon_slayed_pile->rect.y,
+        };
+        card->placement = slayed_pile_placement;
+    }
 
     int damage_to_take = monster_power - weapon_power;
     life_points -= damage_to_take > 0 ? damage_to_take : 0;
-    card->placement = discard_pile_placement;
 
     return;
 }
