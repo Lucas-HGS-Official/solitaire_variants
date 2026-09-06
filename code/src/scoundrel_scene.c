@@ -457,10 +457,6 @@ void _heal_damage(Card *card) {
     return;
 }
 void _empty_slayed_monsters(float dt) {
-    if (weapon_slayed_pile->size <= 0) {
-        current_phase = DRAW_PHASE;
-        return;
-    }
     new_card_timer -= dt;
     if (new_card_timer <= 0) {
         new_card_timer = NEW_CARD_TIME;
@@ -468,6 +464,9 @@ void _empty_slayed_monsters(float dt) {
         Vector2 discard_pile_placement = (Vector2) {
             .x=discard_pile->rect.x, .y=discard_pile->rect.y
         };
+        if (weapon_slayed_pile->size <= 1) {
+            current_phase = DRAW_PHASE;
+        }
 
         for (int i=0; i<MAX_CARDS; i++) {
             if (card_list[i].is_active) {
