@@ -406,8 +406,14 @@ void _take_damage(Card *card) {
         monster_power = ACE_CARD_VALUE_MODIFIER;
     }
 
+    int slayed_monster_power = weapon_slayed_pile->top.num + CARD_VALUE_MODIFIER;
+    if (weapon_slayed_pile->top.num == ACE_NUM && weapon_slayed_pile->size <= 0) {
+        slayed_monster_power = ACE_CARD_VALUE_MODIFIER;
+    }
+    bool is_weapon_usable = monster_power < slayed_monster_power;
+
     int weapon_power = 0;
-    if (weapon_slot->card.is_active) {
+    if (weapon_slot->card.is_active && is_weapon_usable ) {
         weapon_power = weapon_slot->card.num + CARD_VALUE_MODIFIER;
 
         Vector2 slayed_pile_placement = (Vector2) {
