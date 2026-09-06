@@ -346,18 +346,17 @@ void _update_card_in_room(Slot *room) {
 
     bool is_slot_clicked = is_left_mouse_pressed && is_collision_mouse_slot;
 
-    // TODO: Simplify is_slot_check
+    if (!is_slot_clicked) {
+        return;
+    }
+    for (int j=0; j<MAX_CARDS; j++) {
+        if (card_list[j].is_active) {
+            continue;
+        } else {
+            card_list[j] = take_card_from_slot(room);
+            card_list[j].is_pickup = true;
 
-    if (is_slot_clicked) {
-        for (int j=0; j<MAX_CARDS; j++) {
-            if (card_list[j].is_active) {
-                continue;
-            } else {
-                card_list[j] = take_card_from_slot(room);
-                card_list[j].is_pickup = true;
-
-                break;
-            }
+            break;
         }
     }
 }
