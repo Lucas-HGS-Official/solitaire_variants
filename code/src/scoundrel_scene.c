@@ -15,6 +15,7 @@ typedef enum PHASE_STATE {
     DRAW_PHASE,
     KEEP_PHASE,
     MAIN_PHASE,
+    MAINTENANCE_PHASE,
 
     PHASES_NUM,
 } PHASE_STATE;
@@ -61,6 +62,7 @@ static void _update_scoundrel_loose_card(Card *card, float dt);
 static void _add_weapon_to_slot(Card *card);
 static void _take_damage(Card *card);
 static void _heal_damage(Card *card);
+static void _empty_slayed_monsters(float dt);
 
 
 void init_scoundrel(CardSet *resources_card_set){
@@ -84,7 +86,6 @@ void init_scoundrel(CardSet *resources_card_set){
         .y=deck_rect.y*2,
     };
     weapon_slot = init_slot(weapon_pos, card_set);
-    // weapon_pos.y += weapon_slot->rect.height/2;
     weapon_pos.x -= weapon_slot->rect.width;
     weapon_slayed_pile = init_pile(weapon_pos, card_set);
 
@@ -265,6 +266,11 @@ void _update_all_cards(float dt) {
 
         bool is_weapon_type = card_list[i].suit == (CARD_SUIT) WEAPON_TYPE;
         if (is_in_weapon && is_weapon_type && is_just_released) {
+            card_list[i].placement = (Vector2){
+                weapon_slot->rect.x, weapon_slot->rect.y
+            };
+        }
+        if (is_weapon_type && is_card_in_place && is_in_weapon) {
             _add_weapon_to_slot(&card_list[i]);
         }
 
@@ -292,7 +298,9 @@ void _update_all_cards(float dt) {
 
         if (is_discarted && is_card_in_place) {
             push_card_to_pile(discard_pile, &card_list[i]);
-            current_phase = DRAW_PHASE;
+            if (current_phase == MAIN_PHASE) {
+                current_phase = DRAW_PHASE;
+            }
         }
     }
 
@@ -322,6 +330,10 @@ void _update_room(float dt) {
             }
             break;
 
+        case MAINTENANCE_PHASE:
+            _empty_slayed_monsters(dt);
+            break;
+
         case PHASES_NUM:
             break;
     }
@@ -333,6 +345,8 @@ void _update_card_in_room(Slot *room) {
     bool is_left_mouse_pressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
     bool is_slot_clicked = is_left_mouse_pressed && is_collision_mouse_slot;
+
+    // TODO: Simplify is_slot_check
 
     if (is_slot_clicked) {
         for (int j=0; j<MAX_CARDS; j++) {
@@ -386,21 +400,14 @@ void _add_weapon_to_slot(Card *card) {
             }
             card_list[i] = take_card_from_slot(weapon_slot);
             card_list[i].placement = discard_pile_placement;
-            card_list[i].spr.dest_rec.y -= card_list[i].spr.dest_rec.height;
             break;
         }
-        // while (weapon_slayed_pile->size > 0) {
-        //     for (int i=0; i<MAX_CARDS; i++) {
-        //         if (card_list[i].is_active) {
-        //             continue;
-        //         }
-        //         card_list[i] = pop_card_from_pile(weapon_slayed_pile);
-        //         card_list[i].placement = discard_pile_placement;
-        //     }
-        // }
+        new_card_timer = NEW_CARD_TIME;
+        current_phase = MAINTENANCE_PHASE;
+    } else {
+        current_phase = DRAW_PHASE;
     }
     put_card_in_slot(weapon_slot, card);
-    current_phase = DRAW_PHASE;
 
     return;
 }
@@ -447,6 +454,31 @@ void _heal_damage(Card *card) {
     }
     life_points = (int)Clamp((float)life_points, 0, MAX_LIFE);
     card->placement = discard_pile_placement;
+
+    return;
+}
+void _empty_slayed_monsters(float dt) {
+    if (weapon_slayed_pile->size <= 0) {
+        current_phase = DRAW_PHASE;
+        return;
+    }
+    new_card_timer -= dt;
+    if (new_card_timer <= 0) {
+        new_card_timer = NEW_CARD_TIME;
+
+        Vector2 discard_pile_placement = (Vector2) {
+            .x=discard_pile->rect.x, .y=discard_pile->rect.y
+        };
+
+        for (int i=0; i<MAX_CARDS; i++) {
+            if (card_list[i].is_active) {
+                continue;
+            }
+            card_list[i] = pop_card_from_pile(weapon_slayed_pile);
+            card_list[i].placement = discard_pile_placement;
+            break;
+        }
+    }
 
     return;
 }
