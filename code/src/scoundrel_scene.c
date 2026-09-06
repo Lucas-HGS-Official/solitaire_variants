@@ -377,18 +377,27 @@ void _update_scoundrel_loose_card(Card *card, float dt) {
 }
 void _add_weapon_to_slot(Card *card) {
     if (weapon_slot->card.is_active) {
-        for (int j=0; j<MAX_CARDS; j++) {
-            if (card_list[j].is_active) {
+        Vector2 discard_pile_placement = (Vector2) {
+            .x=discard_pile->rect.x, .y=discard_pile->rect.y
+        };
+        for (int i=0; i<MAX_CARDS; i++) {
+            if (card_list[i].is_active) {
                 continue;
             }
-            Vector2 discard_pile_placement = (Vector2) {
-                .x=discard_pile->rect.x, .y=discard_pile->rect.y
-            };
-            card_list[j] = take_card_from_slot(weapon_slot);
-            card_list[j].placement = discard_pile_placement;
-            card_list[j].spr.dest_rec.y -= card_list[j].spr.dest_rec.height;
+            card_list[i] = take_card_from_slot(weapon_slot);
+            card_list[i].placement = discard_pile_placement;
+            card_list[i].spr.dest_rec.y -= card_list[i].spr.dest_rec.height;
             break;
         }
+        // while (weapon_slayed_pile->size > 0) {
+        //     for (int i=0; i<MAX_CARDS; i++) {
+        //         if (card_list[i].is_active) {
+        //             continue;
+        //         }
+        //         card_list[i] = pop_card_from_pile(weapon_slayed_pile);
+        //         card_list[i].placement = discard_pile_placement;
+        //     }
+        // }
     }
     put_card_in_slot(weapon_slot, card);
     current_phase = DRAW_PHASE;
