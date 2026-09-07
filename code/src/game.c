@@ -47,6 +47,7 @@ void game_init(void) {
 // Main game loop
 void game_loop(void) {
     while (!WindowShouldClose()) {
+        // Passes frame time as dt, used for timers and to keep movement consistent
         _update_game(GetFrameTime());
         _draw_game();
     }

@@ -31,8 +31,8 @@ typedef enum SCOUNDREL_CARD_TYPE {
 #define ROOM_SIZE 4
 #define NEW_CARD_TIME .5f
 #define MAX_LIFE 20
-#define ACE_CARD_VALUE_MODIFIER 14
-#define CARD_VALUE_MODIFIER 1
+#define ACE_CARD_VALUE_MODIFIER 14 // Ace value in scoundrel
+#define CARD_VALUE_MODIFIER 1 // Add to the card num to get the real value
 
 
 static Card card_list[MAX_CARDS] = {0};
@@ -134,7 +134,7 @@ void draw_scoundrel(void) {
         .x=weapon_slot->rect.x + weapon_slot->rect.width + 5,
         .y=discard_pile->rect.y*2+5,
     };
-    DrawText(TextFormat("LP: %i", life_points), life_pos.x, life_pos.y, 30, WHITE);
+    DrawText(TextFormat("LP: %i", life_points), life_pos.x, life_pos.y, 30, RED);
 }
 void destroy_scoundrel(void) {
     _destroy_soundrel_deck(deck_dungeon);
@@ -152,6 +152,7 @@ static Pile *_init_scoundrel_deck(CardSet *card_set, Vector2 deck_pos) {
     new_deck->is_faceup = false;
 
     for (int i=0; i<DECK_SIZE; i++) {
+        // Taking off cards not used in the scoundrel rule set
         if (
             (card_set->cards[i].suit == HEARTS_SUIT ||
             card_set->cards[i].suit == DIAMONDS_SUIT) &&
@@ -178,17 +179,17 @@ void _destroy_soundrel_deck(Pile *deck_dungeon) {
     return;
 }
 void _fill_room(float dt) {
-    int empty_rooms = 0;
+    int empty_slots_from_room = 0;
     for (int i=0; i<ROOM_SIZE; i++) {
         if (!dungeon_room[i].card.is_active) {
-            empty_rooms++;
+            empty_slots_from_room++;
             if (!is_room_to_be_filled) {
                 empty_room_slots[i].x = dungeon_room[i].rect.x;
                 empty_room_slots[i].y = dungeon_room[i].rect.y;
             }
         }
     }
-    if (empty_rooms > 2) {
+    if (empty_slots_from_room > 2) {
         is_room_to_be_filled = true;
     }
     if (is_room_to_be_filled) {
@@ -205,6 +206,7 @@ void _fill_room(float dt) {
                 if (Vector2Equals(empty_room_slots[j], Vector2Zero())) {
                     continue;
                 } else {
+                    // Passes the coords of empty slots in the room, for the card to go to
                     card_list[i].placement = empty_room_slots[j];
                     empty_room_slots[j] = Vector2Zero();
                     break;
@@ -213,11 +215,11 @@ void _fill_room(float dt) {
             break;
         }
     }
-    if (empty_rooms == 0) {
+    if (empty_slots_from_room == 0) {
         is_room_to_be_filled = false;
     }
     if (!is_room_to_be_filled) {
-        if (is_room_avoidable && empty_rooms == 0) {
+        if (is_room_avoidable && empty_slots_from_room == 0) {
             current_phase = KEEP_PHASE;
             is_room_avoidable = false;
         } else {
@@ -251,11 +253,12 @@ void _update_all_cards(float dt) {
 
         bool is_card_in_place = (
             Vector2Distance(card_pos, card_list[i].placement) < 1.f &&
-            !card_list[i].is_pickup
+            is_loose
         );
         bool is_just_released = IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
 
         for (int j=0; j<ROOM_SIZE; j++) {
+            // Putting the card in it's room slot when the card reachs it
             if (!is_card_in_place) {
                 continue;
             }
@@ -264,6 +267,7 @@ void _update_all_cards(float dt) {
             }
         }
 
+        // changes card placement if it is a weapon card
         bool is_weapon_type = card_list[i].suit == (CARD_SUIT) WEAPON_TYPE;
         if (is_in_weapon && is_weapon_type && is_just_released) {
             card_list[i].placement = (Vector2){
@@ -274,24 +278,25 @@ void _update_all_cards(float dt) {
             _add_weapon_to_slot(&card_list[i]);
         }
 
+        // Monster damage
         bool is_monster_type = (bool) (
             card_list[i].suit == (CARD_SUIT) MONSTER_CLUB_TYPE ||
             card_list[i].suit == (CARD_SUIT) MONSTER_SPADE_TYPE
         );
         bool is_taking_damage = is_monster_type && is_in_weapon && is_loose && !is_discarted;
-
         if (is_taking_damage && is_just_released) {
             _take_damage(&card_list[i]);
         }
 
+        // Potion healing
         bool is_potion_type = card_list[i].suit == (CARD_SUIT) HEALTH_POTION_TYPE;
         bool is_healing_damage = is_potion_type && is_in_weapon && is_loose && !is_discarted;
-
         if (is_healing_damage && is_just_released) {
             _heal_damage(&card_list[i]);
         }
 
         if (is_slayed && is_card_in_place) {
+            // Puts slayed monster in the slayed pile and checks if the room should be filled
             push_card_to_pile(weapon_slayed_pile, &card_list[i]);
             current_phase = DRAW_PHASE;
         }
@@ -361,6 +366,7 @@ void _update_card_in_room(Slot *room) {
     }
 }
 void _avoid_room(void) {
+    // Puts all room card in the bottom of the deck
     Pile temp = {0};
     for (int i=0; i<MAX_CARDS; i++) {
         if (i-ROOM_SIZE >= deck_dungeon->size) { break; }
@@ -390,6 +396,7 @@ void _update_scoundrel_loose_card(Card *card, float dt) {
 }
 void _add_weapon_to_slot(Card *card) {
     if (weapon_slot->card.is_active) {
+        // Swap cards
         Vector2 discard_pile_placement = (Vector2) {
             .x=discard_pile->rect.x, .y=discard_pile->rect.y
         };
@@ -425,10 +432,12 @@ void _take_damage(Card *card) {
     if (weapon_slayed_pile->top.num == ACE_NUM && weapon_slayed_pile->size <= 0) {
         slayed_monster_power = ACE_CARD_VALUE_MODIFIER;
     }
+
+    // In scoundrel the weapon can only be used for weaker and weaker monsters
     bool is_weapon_usable = monster_power < slayed_monster_power;
 
     int weapon_power = 0;
-    if (weapon_slot->card.is_active && is_weapon_usable ) {
+    if (weapon_slot->card.is_active && is_weapon_usable) {
         weapon_power = weapon_slot->card.num + CARD_VALUE_MODIFIER;
 
         Vector2 slayed_pile_placement = (Vector2) {
