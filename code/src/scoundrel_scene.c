@@ -98,15 +98,15 @@ void init_scoundrel(CardSet *resources_card_set){
 }
 void update_scoundrel(float dt) {
     _update_room(dt);
-    if (IsKeyPressed(KEY_N)) {
-        for (int i=0; i<MAX_CARDS; i++) {
-            if (card_list[i].is_active) {
-                continue;
-            }
-            card_list[i] = instance_card(card_set, DIAMONDS_SUIT, KING_NUM, GetMousePosition());
-            break;
-        }
-    }
+    // if (IsKeyPressed(KEY_N)) {
+    //     for (int i=0; i<MAX_CARDS; i++) {
+    //         if (card_list[i].is_active) {
+    //             continue;
+    //         }
+    //         card_list[i] = instance_card(card_set, CLUBS_SUIT, ACE_NUM, GetMousePosition());
+    //         break;
+    //     }
+    // }
     _update_all_cards(dt);
 
     return;
@@ -432,12 +432,16 @@ void _take_damage(Card *card) {
     }
 
     int slayed_monster_power = weapon_slayed_pile->top.num + CARD_VALUE_MODIFIER;
-    if (weapon_slayed_pile->top.num == ACE_NUM && weapon_slayed_pile->size <= 0) {
+    if (weapon_slayed_pile->top.num == ACE_NUM && weapon_slayed_pile->top.is_active) {
+        // printf("\n test3 \n");
         slayed_monster_power = ACE_CARD_VALUE_MODIFIER;
     }
 
     // In scoundrel the weapon can only be used for weaker and weaker monsters
     bool is_weapon_usable = monster_power < slayed_monster_power;
+    if (!weapon_slayed_pile->top.is_active) {
+        is_weapon_usable = true;
+    }
 
     int weapon_power = 0;
     if (weapon_slot->card.is_active && is_weapon_usable) {
