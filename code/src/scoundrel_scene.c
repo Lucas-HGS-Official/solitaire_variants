@@ -63,6 +63,7 @@ static void _add_weapon_to_slot(Card *card);
 static void _take_damage(Card *card);
 static void _heal_damage(Card *card);
 static void _empty_slayed_monsters(float dt);
+static void _draw_spread_pile(Pile *pile);
 
 
 void init_scoundrel(CardSet *resources_card_set){
@@ -124,7 +125,8 @@ void draw_scoundrel(void) {
 
     draw_slot(weapon_slot);
 
-    draw_pile(weapon_slayed_pile);
+    // draw_pile(weapon_slayed_pile);
+    _draw_spread_pile(weapon_slayed_pile);
 
     for (int i=0; i<MAX_CARDS; i++) {
         draw_card(&card_list[i]);
@@ -495,6 +497,29 @@ void _empty_slayed_monsters(float dt) {
             break;
         }
     }
+
+    return;
+}
+static void _draw_spread_pile(Pile *pile) {
+
+    Rectangle pile_bg = pile->rect;
+
+    DrawRectangleRec(pile_bg, RAYWHITE);
+    DrawRectangleLinesEx(pile_bg, 5.f, DARKBLUE);
+
+    if (pile->size) {
+        Rectangle dest_rec = pile->rect;
+        Card card = pile->top;
+        for (int i=0; i<pile->size; i++) {
+            card = pile->pile[i];
+            card.spr.dest_rec = dest_rec;
+            draw_card(&card);
+            dest_rec.y += 15;
+            // pile->pile[i].spr.dest_rec.y += 15;
+            // draw_card(&pile->pile[i]);
+        }
+    }
+
 
     return;
 }
