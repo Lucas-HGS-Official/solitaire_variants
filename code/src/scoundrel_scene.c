@@ -64,6 +64,7 @@ static void _take_damage(Card *card);
 static void _heal_damage(Card *card);
 static void _empty_slayed_monsters(float dt);
 static void _draw_spread_pile(Pile *pile);
+static void _place_deck_card_in_empty_room_slot(Card *card);
 
 
 void init_scoundrel(CardSet *resources_card_set){
@@ -203,17 +204,8 @@ void _fill_room(float dt) {
             if (card_list[i].is_active) {
                 continue;
             }
-            card_list[i] = pop_card_from_pile(deck_dungeon);
-            for (int j=0; j<ROOM_SIZE; j++) {
-                if (Vector2Equals(empty_room_slots[j], Vector2Zero())) {
-                    continue;
-                } else {
-                    // Passes the coords of empty slots in the room, for the card to go to
-                    card_list[i].placement = empty_room_slots[j];
-                    empty_room_slots[j] = Vector2Zero();
-                    break;
-                }
-            }
+            _place_deck_card_in_empty_room_slot(&card_list[i]);
+
             break;
         }
     }
@@ -518,5 +510,19 @@ static void _draw_spread_pile(Pile *pile) {
         }
     }
 
+    return;
+}
+static void _place_deck_card_in_empty_room_slot(Card *card) {
+    *card = pop_card_from_pile(deck_dungeon);
+    for (int j=0; j<ROOM_SIZE; j++) {
+        if (Vector2Equals(empty_room_slots[j], Vector2Zero())) {
+            continue;
+        } else {
+            // Passes the coords of empty slots in the room, for the card to go to
+            card->placement = empty_room_slots[j];
+            empty_room_slots[j] = Vector2Zero();
+            break;
+        }
+    }
     return;
 }
