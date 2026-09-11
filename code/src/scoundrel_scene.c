@@ -515,11 +515,8 @@ static void _draw_spread_pile(Pile *pile) {
             card.spr.dest_rec = dest_rec;
             draw_card(&card);
             dest_rec.y += 15;
-            // pile->pile[i].spr.dest_rec.y += 15;
-            // draw_card(&pile->pile[i]);
         }
     }
-
 
     return;
 }
